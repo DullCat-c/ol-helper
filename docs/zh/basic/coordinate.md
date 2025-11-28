@@ -1,0 +1,68 @@
+---
+outline: deep
+---
+
+# 创建一个实例
+
+## olHelper实例
+
+````html
+<div id="map" style="height: 50vh;width: 50vw;"></div>
+````
+````js
+//实例化,传入dom id, 会把地图canvas挂载到dom节点上
+//每次实例化会生成一个新的实例,需要复用请保存或传值,重复实例化会使以前的实例化对象失效
+let mapInstance = new olHelper('map');
+
+````
+
+## 坐标系讲解
+openlayers内置的坐标系只有两个,即EPSG:4326和EPSG:3857 
+
+一般来说业务主要使用EPSG:4326坐标系,也被称为WGS84坐标系.它使用经度和纬度表示地球上的点位置,适合描述大范围的地理信息,单位是度.是国际上一种广泛使用的地理坐标系统.
+
+还有一种很常见的坐标系,EPSG:4490坐标系,也称为中国2000大地坐标系(CGCS2000),是中国国家测绘局于2007年发布的地理坐标系统.
+
+具体技术细节这里不讨论,两者之间差距为厘米级,而对于绝大多数民用场景,定位误差在5米到15米以内通常被认为是合理或良好的.
+
+所以大多数情况下,我们可以认为,CGCS2000(EPSG:4490)坐标和WGS84(EPSG:4326)坐标是一致的.
+
+olHelper默认使用EPSG:4326坐标系,如果需要设置其他的坐标系可以加入配置,
+
+::: warning
+创建实例后无法更改坐标系,必须重新创建实例
+:::
+
+
+
+
+## 底图加载
+
+内置四种天地图底图配置
+````js
+//实例化,传入dom id, 会把地图canvas挂载到dom节点上
+//每次实例化会生成一个新的实例,需要复用请保存或传值,重复实例化会使以前的实例化对象失效
+let mapInstance = new olHelper('map');
+
+````
+
+
+| 底图类型 | type值 |
+| ------------ | :------: |
+| 矢量底图 |  vec_c |
+| 矢量注记 |  cva_c |
+| 影像底图 |  img_c |
+| 影像注记 |  cia_c |
+
+
+
+
+<aCom></aCom>
+<script setup>
+import { useData } from 'vitepress';
+import aCom from '../../components/aCom.vue';
+const { site, theme, page, frontmatter } = useData()
+</script>
+
+<style>
+</style>
