@@ -9,7 +9,7 @@ export default defineConfig({
   title: 'ol-helper',
   description: '基于openlayers的工具包,2维地图业务的实用开发,快速搭建2维地图并实现相关业务',
   // 添加 head 配置
-  head: [['link', { rel: 'icon', href: '/logo.ico' }]],
+  head: [['link', { rel: 'icon', href: 'logo.ico' }]],
   vite: {
     plugins: [
       UnoCSS(),
