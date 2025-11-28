@@ -25,4 +25,4 @@ dist-ssr
 *zip
 
 # vitepress build output
-.vitepress/cache
+docs/.vitepress/cache
