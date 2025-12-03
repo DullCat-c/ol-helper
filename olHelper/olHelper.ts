@@ -147,8 +147,8 @@ export default class olHelper {
     let newCenter = this.map.getView().getCenter();
 
     //说明地图没动,此时触发不了render里面的高亮设置
-    if (oldCenter[0] === newCenter[0] && oldCenter[1] === newCenter[1]) {
-    }
+    // if (oldCenter[0] === newCenter[0] && oldCenter[1] === newCenter[1]) {
+    // }
     // let a = this.map.getView().getCenter();
     // console.log(oldCenter,newCenter);
     // let zoom = this.map.getView().getZoom();

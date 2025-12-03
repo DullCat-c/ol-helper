@@ -9,7 +9,7 @@ export default defineConfig({
   title: 'ol-helper',
   description: '基于openlayers的工具包,2维地图业务的实用开发,快速搭建2维地图并实现相关业务',
   // 添加 head 配置
-  head: [['link', { rel: 'icon', href: '/logo.ico' }]],
+  head: [['link', { rel: 'icon', href: '/ol-helper/logo.ico' }]],
   vite: {
     plugins: [
       UnoCSS(),
@@ -66,7 +66,7 @@ export default defineConfig({
       },
     ],
 
-    socialLinks: [{ icon: 'github', link: 'https://github.com/vuejs/vitepress' }],
+    socialLinks: [{ icon: 'github', link: 'https://github.com/DullCat-c/ol-helper' }],
   },
   markdown: {
     // 代码块行号显示

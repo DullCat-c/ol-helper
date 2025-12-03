@@ -18,12 +18,14 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import olHelper, { td4326WMTSPreset } from '../../olHelper/olHelper';
 
+let _olHelper = reactive({});
 onMounted(() => {
   let tdKey = '086d31664864bb1b890c28084f786ca8';
-  let _olHelper = new olHelper('map');
+  _olHelper = new olHelper('map');
+  // Object.assign(_olHelper, new olHelper('map'))
   _olHelper.map.addLayer(td4326WMTSPreset(tdKey, 'img_c'));
   _olHelper.map.addLayer(td4326WMTSPreset(tdKey, 'cva_c'));
   _olHelper.map.addLayer(td4326WMTSPreset(tdKey, 'vec_c', false));
@@ -31,6 +33,8 @@ onMounted(() => {
 
   _olHelper.setMapCenter([114.393569, 30.50846], 18);
 
+  _olHelper.map.a = 1;
+  console.log('_olHelper', _olHelper);
   // 获取DOM元素
   const option1 = document.getElementById('img');
   const option2 = document.getElementById('vec');
@@ -62,6 +66,13 @@ onMounted(() => {
       });
   }
 });
+
+function getterHelper() {
+  return _olHelper;
+}
+
+// let a = 1;
+defineExpose({ getterHelper });
 </script>
 
 <style scoped></style>

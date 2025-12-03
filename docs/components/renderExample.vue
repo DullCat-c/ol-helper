@@ -18,7 +18,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import olHelper, { td4326WMTSPreset } from '../../olHelper/olHelper';
 
 onMounted(() => {
