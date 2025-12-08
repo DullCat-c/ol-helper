@@ -74,5 +74,3 @@ function getterHelper() {
 // let a = 1;
 defineExpose({ getterHelper });
 </script>
-
-<style scoped></style>

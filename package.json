@@ -44,6 +44,8 @@
     "jiti": "^2.6.1",
     "ol": "^7.5.2",
     "prettier": "^3.4.2",
+    "stylelint": "^16.26.1",
+    "stylelint-config-standard": "^39.0.1",
     "typescript": "^4.9.5",
     "typescript-eslint": "^8.48.0",
     "unocss": "^66.3.3",
@@ -55,6 +57,8 @@
   },
   "dependencies": {
     "lint-staged": "^16.2.7",
+    "postcss-html": "^1.8.0",
+    "stylelint-order": "^7.0.0",
     "vue": "^3.5.24"
   },
   "engines": {

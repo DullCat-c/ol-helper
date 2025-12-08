@@ -166,5 +166,3 @@ import SwitchBaseLayerExample from '../../components/switchBaseLayerExample.vue'
 const { site, theme, page, frontmatter } = useData()
 </script>
 
-<style>
-</style>

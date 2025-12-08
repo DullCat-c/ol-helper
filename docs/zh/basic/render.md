@@ -26,5 +26,3 @@ import aCom from '../../components/aCom.vue';
 const { site, theme, page, frontmatter } = useData()
 </script>
 
-<style>
-</style>

@@ -27,6 +27,3 @@ openlayers内置的坐标系只有两个,即EPSG:4326和EPSG:3857
 import { useData } from 'vitepress';
 const { site, theme, page, frontmatter } = useData()
 </script>
-
-<style>
-</style>

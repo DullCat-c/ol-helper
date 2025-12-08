@@ -15,7 +15,7 @@
       </div>
     </div>
 
-    <switchBaseLayerExample ref="map"></switchBaseLayerExample>
+    <switchBaseLayerExample ref="map" class="map"></switchBaseLayerExample>
     <!--    <div id="map" class="w-full h-50vh"></div>-->
   </div>
 </template>
@@ -33,4 +33,13 @@ onMounted(() => {
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+/deep/ .map {
+  height: 50vh;
+}
+
+.vec {
+  border-bottom: 1px;
+  height: 100%;
+}
+</style>
