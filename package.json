@@ -12,16 +12,19 @@
     "docs:dev": "vitepress dev docs",
     "lint:eslint": "eslint . --fix",
     "lint:prettier": "prettier --write  \"*.{js,json,tsx,css,less,scss,vue,html,md}\"",
+    "lint:stylelint": "stylelint --cache --fix \"**/*.{vue,less,postcss,css,scss}\" --cache --cache-location node_modules/.cache/stylelint/",
     "lint:lint-staged": "lint-staged",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs"
   },
   "lint-staged": {
     "*.{html,ts,js,json,jsx,tsx}": [
-      "npm run lint:prettier"
+      "eslint --fix",
+      "prettier --write",
+      "stylelint --fix"
     ],
     "*.{js,ts,jsx,tsx,json,mjs}": [
-      "npm run lint:eslint"
+      "eslint --fix"
     ]
   },
   "author": "John Tsai",

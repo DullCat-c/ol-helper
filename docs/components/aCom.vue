@@ -32,14 +32,3 @@ onMounted(() => {
   // },5000)
 });
 </script>
-
-<style scoped>
-/deep/ .map {
-  height: 50vh;
-}
-
-.vec {
-  border-bottom: 1px;
-  height: 100%;
-}
-</style>
