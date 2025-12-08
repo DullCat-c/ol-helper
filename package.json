@@ -20,7 +20,7 @@
     "*.{html,ts,js,json,jsx,tsx}": [
       "npm run lint:prettier"
     ],
-    "*.{js,ts,jsx,tsx}": [
+    "*.{js,ts,jsx,tsx,json,mjs}": [
       "npm run lint:eslint"
     ]
   },
@@ -28,6 +28,8 @@
   "license": "MIT",
   "description": "",
   "devDependencies": {
+    "@commitlint/cli": "^20.2.0",
+    "@commitlint/config-conventional": "^20.2.0",
     "@eslint/js": "^9.39.1",
     "@types/node": "^18.19.70",
     "@types/openlayers": "^4.6.23",
