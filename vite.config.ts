@@ -15,8 +15,8 @@ export default defineConfig({
     UnoCSS(),
     Components({
       resolvers: [ElementPlusResolver()],
-      // dts: './autoImport/components.d.ts',
-      dts: false,
+      dts: './autoImport/components.d.ts',
+      // dts: false,
       directoryAsNamespace: true,
     }),
     // vue自动导入

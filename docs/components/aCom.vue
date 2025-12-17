@@ -26,7 +26,7 @@ import switchBaseLayerExample from './switchBaseLayerExample.vue';
 
 let map = ref(null);
 onMounted(() => {
-  console.log('map', map.value.getterHelper());
+  // console.log('map', map.value.getterHelper());
   // setTimeout(()=>{
   //
   // },5000)
