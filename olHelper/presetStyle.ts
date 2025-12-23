@@ -27,3 +27,26 @@ export const walkDrawStyle = new Style({
   }),
   zIndex: 99999,
 });
+
+// 原生绘制样式
+export const walkDrawStyle2 = new Style({
+  // 绘制几何图形的样式
+  fill: new Fill({
+    color: 'green',
+  }),
+  stroke: new Stroke({
+    color: 'green',
+    width: 8,
+  }),
+  image: new CircleStyle({
+    radius: 5,
+    // stroke: new Stroke({
+    // color: 'rgb(255, 0, 0)',
+    // width: 10,
+    // }),
+    fill: new Fill({
+      color: 'green',
+    }),
+  }),
+  zIndex: 99999,
+});

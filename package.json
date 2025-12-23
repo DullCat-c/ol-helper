@@ -10,6 +10,7 @@
     "prepare": "husky",
     "test": "echo \"Error: no test specified\" && exit 1",
     "docs:dev": "vitepress dev docs",
+    "type:check": "vue-tsc --noEmit --skipLibCheck",
     "lint:eslint": "eslint . --fix",
     "lint:prettier": "prettier --write  \"*.{js,json,tsx,css,less,scss,vue,html,md}\"",
     "lint:stylelint": "stylelint --cache --fix \"**/*.{vue,less,postcss,css,scss}\" --cache --cache-location node_modules/.cache/stylelint/",
@@ -35,7 +36,6 @@
     "@commitlint/config-conventional": "^20.2.0",
     "@eslint/js": "^9.39.1",
     "@types/node": "^18.19.70",
-    "@types/openlayers": "^4.6.23",
     "@unocss/preset-attributify": "^66.3.3",
     "@unocss/preset-icons": "^66.3.3",
     "@unocss/preset-wind4": "^66.3.3",
@@ -49,19 +49,20 @@
     "prettier": "^3.4.2",
     "stylelint": "^16.26.1",
     "stylelint-config-standard": "^39.0.1",
-    "typescript": "^4.9.5",
     "typescript-eslint": "^8.48.0",
     "unocss": "^66.3.3",
     "unplugin-auto-import": "^0.14.4",
     "unplugin-vue-components": "^0.22.12",
     "vite": "^3.2.11",
     "vite-plugin-compression": "^0.5.1",
-    "vitepress": "2.0.0-alpha.13"
+    "vitepress": "2.0.0-alpha.13",
+    "vue-tsc": "^3.1.8"
   },
   "dependencies": {
     "lint-staged": "^16.2.7",
     "postcss-html": "^1.8.0",
     "stylelint-order": "^7.0.0",
+    "typescript": "^5.9.3",
     "vue": "^3.5.24"
   },
   "engines": {

@@ -22,6 +22,7 @@
     "src/**/*.d.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
+    "docs/components/*.vue",
     "autoImport/*.d.ts",
     "types/**/*.d.ts",
     "types/**/*.ts"

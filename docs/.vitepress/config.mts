@@ -5,7 +5,7 @@ import Components from 'unplugin-vue-components/vite';
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  base:'/ol-helper/',
+  base: '/ol-helper/',
   title: 'ol-helper',
   description: '基于openlayers的工具包,2维地图业务的实用开发,快速搭建2维地图并实现相关业务',
   // 添加 head 配置
@@ -63,6 +63,11 @@ export default defineConfig({
           { text: '绘制,编辑', link: '/zh/basic/draw' },
           { text: '控件', link: '/zh/basic/controller' },
         ],
+      },
+      {
+        text: '工具',
+        collapsed: false,
+        items: [{ text: '生成geoJson', link: '/zh/tool/geoJson' }],
       },
     ],
 

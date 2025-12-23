@@ -21,11 +21,9 @@
 <script setup lang="ts">
 import olHelper, { td4326WMTSPreset } from '../../olHelper/olHelper';
 
-let _olHelper!: olHelper;
 onMounted(() => {
   let tdKey = '086d31664864bb1b890c28084f786ca8';
-  _olHelper = new olHelper('map');
-  // Object.assign(_olHelper, new olHelper('map'))
+  let _olHelper = new olHelper('map');
   _olHelper.map.addLayer(td4326WMTSPreset(tdKey, 'img_c'));
   _olHelper.map.addLayer(td4326WMTSPreset(tdKey, 'cva_c'));
   _olHelper.map.addLayer(td4326WMTSPreset(tdKey, 'vec_c', false));
@@ -33,8 +31,6 @@ onMounted(() => {
 
   _olHelper.setMapCenter([114.393569, 30.50846], 18);
 
-  // _olHelper.map.a = 1;
-  // console.log('_olHelper', _olHelper);
   // 获取DOM元素
   const option1: HTMLInputElement = document.getElementById('img') as HTMLInputElement;
   const option2: HTMLInputElement = document.getElementById('vec') as HTMLInputElement;
@@ -67,10 +63,4 @@ onMounted(() => {
       });
   }
 });
-
-function getterHelper() {
-  return _olHelper;
-}
-
-defineExpose({ getterHelper });
 </script>

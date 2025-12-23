@@ -18,7 +18,7 @@ import { click as olSelectClick } from 'ol/events/condition';
 
 // 天地图4326底图预设
 export function td4326WMTSPreset(tdKey: string, tdType: 'vec_c' | 'cva_c' | 'img_c' | 'cia_c', visible: boolean = true) {
-  const projection = olProj.get('EPSG:4326'); // 设置坐标系为4326
+  const projection = olProj.get('EPSG:4326')!; // 设置坐标系为4326
   const projectionExtent = projection.getExtent();
   const size = olExtent.getWidth(projectionExtent) / 256;
   const resolutions = [];
@@ -44,7 +44,7 @@ export function td4326WMTSPreset(tdKey: string, tdType: 'vec_c' | 'cva_c' | 'img
       tileGrid: new WMTSTileGrid({
         origin: olExtent.getTopLeft(projectionExtent),
         resolutions: resolutions.slice(6, 20),
-        matrixIds: matrixIds.slice(6, 20),
+        matrixIds: matrixIds.slice(6, 20).map((num) => num.toString()),
       }),
     }),
     visible: visible,
