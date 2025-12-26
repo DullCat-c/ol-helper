@@ -281,6 +281,19 @@ export const geoJsonData = {
         jfcs: 0,
       },
     },
+  ],
+  crs: {
+    type: 'name',
+    properties: {
+      name: 'urn:ogc:def:crs:EPSG::4490',
+    },
+  },
+  type: 'FeatureCollection',
+};
+
+export const geoJsonData2 = {
+  totalFeatures: 19,
+  features: [
     {
       geometry: {
         coordinates: [111.949562535, 31.813833584],

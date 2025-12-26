@@ -29,13 +29,13 @@ export const walkDrawStyle = new Style({
 });
 
 // 原生绘制样式
-export const walkDrawStyle2 = new Style({
+export const highLightStyle = new Style({
   // 绘制几何图形的样式
   fill: new Fill({
-    color: 'green',
+    color: 'rgba(255, 0, 0)',
   }),
   stroke: new Stroke({
-    color: 'green',
+    color: 'rgba(255, 0, 0)',
     width: 8,
   }),
   image: new CircleStyle({
@@ -45,7 +45,29 @@ export const walkDrawStyle2 = new Style({
     // width: 10,
     // }),
     fill: new Fill({
-      color: 'green',
+      color: 'rgba(255, 0, 0)',
+    }),
+  }),
+  zIndex: 99999,
+});
+
+export const highLightStyle2 = new Style({
+  // 绘制几何图形的样式
+  fill: new Fill({
+    color: 'yellow',
+  }),
+  stroke: new Stroke({
+    color: 'yellow',
+    width: 8,
+  }),
+  image: new CircleStyle({
+    radius: 5,
+    // stroke: new Stroke({
+    // color: 'rgb(255, 0, 0)',
+    // width: 10,
+    // }),
+    fill: new Fill({
+      color: 'yellow',
     }),
   }),
   zIndex: 99999,
