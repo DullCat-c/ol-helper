@@ -67,7 +67,7 @@ export default defineConfig({
       {
         text: '工具',
         collapsed: false,
-        items: [{ text: '生成geoJson', link: '/zh/tool/geoJson' }],
+        items: [{ text: '生成geoJson', link: '/zh/tools/geoJson' }],
       },
     ],
 

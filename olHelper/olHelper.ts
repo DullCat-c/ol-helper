@@ -29,8 +29,10 @@ import { click as olSelectClick, singleClick } from 'ol/events/condition';
 import GeoJSON from 'ol/format/GeoJSON';
 import Feature from 'ol/Feature';
 import Geometry from 'ol/geom/Geometry';
-import { CreateSelectOptions, HighlightInfoType } from './type';
+import { HighlightInfoType, LayerHandlesObject } from './type';
 import { highLightStyle } from './presetStyle';
+import { equals } from 'ol/coordinate';
+import { Options as BaseVectorOptions } from 'ol/layer/BaseVector';
 // import SelectEvent from 'ol/interaction/Select';
 // import  * from './presetConfig'
 export * from './presetConfig';
@@ -40,9 +42,9 @@ export default class olHelper {
   // ol的map实例
   map!: olMap;
   // 管理需要更新的图层
-  layerHandles = new Map();
+  layerHandles: Map<string, LayerHandlesObject> = new Map();
   // 点击map数组
-  selectHandles = new Map();
+  selectHandles: Map<string, olSelect> = new Map();
   // 高亮层,没有自身的style,只用于不被declutter
   highLightLayer = new VectorLayer({
     properties: { name: 'highLightLayer' },
@@ -106,16 +108,6 @@ export default class olHelper {
     });
   }
 
-  resetHighLightInfo() {
-    this.highlightInfo = {
-      id: null, //要高亮要素的唯一标识值
-      idKey: null, //要高亮要素的唯一标识符的key
-      layerName: null, //图层name
-      selectName: null, //select事件的名称
-      style: null, //高亮样式
-    };
-  }
-
   // 刷新地图
   refreshMap() {
     this.layerHandles?.forEach((l) => {
@@ -134,54 +126,6 @@ export default class olHelper {
   toWkt(wkt: WKT) {
     let geometry = new WKT().readGeometry(wkt);
     this.map.getView().fit(geometry.getExtent(), { padding: [50, 50, 50, 50] });
-  }
-
-  // 定位并且高亮要素
-  locateAndHighlight(wkt: WKT, highlightInfo: HighlightInfoType) {
-    if (!(this.highlightInfo.id && this.highlightInfo.idKey && this.highlightInfo.layerName && wkt)) {
-      throw Error(`Please input the correct parameters.`);
-    }
-    Object.assign(this.highlightInfo, highlightInfo);
-    let oldCenter = this.map.getView().getCenter() ?? null;
-    let geometry = new WKT().readGeometry(wkt);
-    this.map.getView().fit(geometry.getExtent(), { padding: [50, 50, 50, 50] });
-    let center = this.map.getView().getCenter() ?? null;
-
-    // 如果地图没有移动,此时不会走到加载要素然后对比的函数里,所以在这里抓取当前视口的要素进行对比
-    // if (this.areCoordinatesEqual(oldCenter, center)) {
-    // }
-  }
-
-  // 比较两个坐标是否一致
-  areCoordinatesEqual(coord1: [number, number] | null, coord2: [number, number] | null, epsilon = 1e-9): boolean {
-    if (!coord1 || !coord2) {
-      return coord1 === coord2;
-    }
-    return Math.abs(coord1[0] - coord2[0]) < epsilon && Math.abs(coord1[1] - coord2[1]) < epsilon;
-  }
-
-  // geometry类型 转 wkt
-  static geometryToWkt(geometry: Geometry) {
-    return new WKT().writeGeometry(geometry);
-  }
-
-  // 返回中心点
-  static getWktCenter(wkt: string) {
-    let geometry = new WKT().readGeometry(wkt);
-    // console.log(geometry.getType());
-    if (geometry.getType() === 'Point') {
-      // return geometry?.flatCoordinates;
-    } else if (geometry.getType() === 'LineString') {
-      // return geometry?.getCoordinateAt(0.5);
-    } else if (geometry.getType() === 'MultiLineString') {
-      return olExtent.getCenter(geometry.getExtent());
-    } else if (geometry.getType() === 'Polygon') {
-      let extent = geometry.getExtent();
-      let centerX = (extent[0] + extent[2]) / 2;
-      let centerY = (extent[1] + extent[3]) / 2;
-      return [centerX, centerY];
-      // return geometry.getInteriorPoint().getCoordinates();
-    }
   }
 
   // 通过图层名获取某个图层,只返回单一
@@ -205,22 +149,18 @@ export default class olHelper {
   }
 
   // 创建唯一name的图层
-  createUniLayer(layerName: string, features: Feature[] = [], style?: Style, options = {}) {
+  createUniLayer(layerName: string, features: Feature[] = [], options: BaseVectorOptions<VectorSource> = {}) {
     let presetOptions = {
       declutter: true,
       zIndex: 1,
-    };
-    Object.assign(presetOptions, options);
-    //创建图层
-    let _layer = new VectorLayer({
-      declutter: presetOptions.declutter,
-      style: style,
-      zIndex: presetOptions.zIndex,
       properties: { name: layerName },
       source: new VectorSource({
         features: features,
       }),
-    });
+    };
+    Object.assign(presetOptions, options);
+    //创建图层
+    let _layer = new VectorLayer(presetOptions);
     // 图层名唯一,第二次加载图层则删除已有同名图层
     let oldLayer = this.getLayerByName(layerName);
     if (oldLayer) {
@@ -233,14 +173,16 @@ export default class olHelper {
 
   /**
    * @description: 创建图层
-   * @param {*} layerName 图层名称
-   * @param {*} update 更新函数，由两部分组成，更新函数和参数
-   * @param {*} style 样式，可以支持样式函数
-   * @param {*} options 选项,可以覆盖和融合没有预设的值
-   * @return {*}
+   * @param layerName 图层名称
+   * @param update 更新函数
+   * @param options 选项,可以覆盖和融合没有预设的值
    */
-  createUpdateLayer(layerName: string, update = (_layer: VectorLayer<VectorSource>) => {}, style?: Style, options = {}) {
-    let _layer = this.createUniLayer(layerName, [], style, options);
+  createUpdateLayer(
+    layerName: string,
+    update = (_layer: VectorLayer<VectorSource>): void => {},
+    options: BaseVectorOptions<VectorSource> = {},
+  ) {
+    let _layer = this.createUniLayer(layerName, [], options);
     let ob = {
       layerName: layerName,
       layer: _layer,
@@ -261,7 +203,7 @@ export default class olHelper {
     let currentAllFeatures = currentSource.getFeatures();
     let zoom = this.map.getView().getZoom() ?? 18;
     let selectedFeature: Feature[] = [];
-    this.selectHandles.forEach((s) => (selectedFeature = selectedFeature.concat(s.getFeatures())));
+    this.selectHandles.forEach((s) => (selectedFeature = selectedFeature.concat(s.getFeatures().getArray())));
     // 循环遍历当前所有要素,删除不需要的元素
     currentAllFeatures.forEach((v, i) => {
       //如果对应feature已经高亮，则不进行移除，这样可以看到跨区地名的全貌
@@ -289,8 +231,15 @@ export default class olHelper {
     // 统一添加新元素
     currentSource.addFeatures(newFeatures);
     // 循环高亮元素,只能放在这里,因为你无法确定要高亮的元素是否存在于当前视口
-    if (this.highlightInfo.id && this.highlightInfo.idKey && this.highlightInfo.layerName === this.highlightInfo.layerName) {
+    if (layer.get('name') === this.highlightInfo.layerName) {
       let features = layer.getSource()?.getFeatures() ?? [];
+      this.setHighlightFeature(features);
+    }
+  }
+
+  // 对比并设置高亮
+  private setHighlightFeature(features: Feature[]) {
+    if (this.highlightInfo.id && this.highlightInfo.idKey) {
       features.forEach((f) => {
         if (this.highlightInfo.id === f.get(this.highlightInfo.idKey!)) {
           // 加入的对应的点击事件,没有就加入到高亮图层
@@ -317,12 +266,44 @@ export default class olHelper {
     }
   }
 
+  // 重置高亮
+  resetHighLightInfo() {
+    this.highlightInfo = {
+      id: null, //要高亮要素的唯一标识值
+      idKey: null, //要高亮要素的唯一标识符的key
+      layerName: null, //图层name
+      selectName: null, //select事件的名称
+      style: null, //高亮样式
+    };
+  }
+  // 定位并且高亮要素
+  locateAndHighlight(wkt: WKT, highlightInfo: HighlightInfoType) {
+    if (!(this.highlightInfo.id && this.highlightInfo.idKey && this.highlightInfo.layerName && wkt)) {
+      throw Error(`Please input the correct parameters.`);
+    }
+    // 定位,并且保存定位前后的坐标点
+    Object.assign(this.highlightInfo, highlightInfo);
+    let oldCenter = this.map.getView().getCenter() ?? null;
+    let geometry = new WKT().readGeometry(wkt);
+    this.map.getView().fit(geometry.getExtent(), { padding: [50, 50, 50, 50] });
+    let center = this.map.getView().getCenter() ?? null;
+
+    // 如果地图没有移动,此时不会走到加载要素然后对比的函数里,所以在这里抓取当前视口的要素进行对比
+    if (oldCenter && center && equals(oldCenter, center)) {
+      let layer = this.layerHandles.get(this.highlightInfo.layerName)?.layer;
+      if (layer) {
+        let features = layer.getSource()?.getFeatures() ?? [];
+        this.setHighlightFeature(features);
+      }
+    }
+  }
+
   /**
    * 自定义点击事件
    * @param name 事件名称,用于管理事件
    * @param options 可选选项
    */
-  createSelect(name: string, options: OlSelectOptions = {}) {
+  useSelect(name: string, options: OlSelectOptions = {}) {
     let selectMode: 'click' | 'multiSelect' = 'click';
     let eventFunc = (event: SelectEvent) => {};
 
@@ -362,7 +343,7 @@ export default class olHelper {
       let activeSelectKeys: string[] = [];
       selectKeys.forEach((key) => {
         let selectHandle = this.selectHandles.get(key);
-        if (selectHandle.getActive()) {
+        if (selectHandle && selectHandle.getActive()) {
           activeSelectKeys.push(key);
           selectHandle.setActive(false);
         }
@@ -378,7 +359,7 @@ export default class olHelper {
 
       // 回调结束后恢复所有的点击事件
       activeSelectKeys.forEach((key) => {
-        this.selectHandles.get(key).setActive(true);
+        this.selectHandles.get(key)?.setActive(true);
       });
     });
 
@@ -422,27 +403,27 @@ export default class olHelper {
     let allSelectKeys = this.selectHandles.keys();
     if (Array.isArray(activeLayerNameArray)) {
       activeLayerNameArray.forEach((layerName) => {
-        this.selectHandles.get(layerName).setActive(true);
+        this.selectHandles.get(layerName)?.setActive(true);
       });
     }
     if (Array.isArray(inactiveLayerNameArray)) {
       inactiveLayerNameArray.forEach((layerName) => {
-        this.selectHandles.get(layerName).setActive(false);
+        this.selectHandles.get(layerName)?.setActive(false);
       });
     }
 
     if (!Array.isArray(activeLayerNameArray) && Array.isArray(inactiveLayerNameArray)) {
       allSelectKeys.forEach((layerName) => {
-        if (!inactiveLayerNameArray.find(layerName)) {
-          this.selectHandles.get(layerName).setActive(false);
+        if (!inactiveLayerNameArray.find((i) => i === layerName)) {
+          this.selectHandles.get(layerName)?.setActive(false);
         }
       });
     }
 
     if (!Array.isArray(inactiveLayerNameArray) && Array.isArray(activeLayerNameArray)) {
       allSelectKeys.forEach((layerName) => {
-        if (!activeLayerNameArray.find(layerName)) {
-          this.selectHandles.get(layerName).setActive(true);
+        if (!activeLayerNameArray.find((i) => i === layerName)) {
+          this.selectHandles.get(layerName)?.setActive(true);
         }
       });
     }
@@ -451,8 +432,8 @@ export default class olHelper {
   //清除所有选择
   clearAllSelect() {
     this.selectHandles.forEach((selectHandles) => {
-      selectHandles.getFeatures().clear(true);
+      selectHandles.getFeatures().clear();
     });
-    // this.highLightLayer.getSource()?.clear();
+    this.highLightLayer.getSource()?.clear();
   }
 }

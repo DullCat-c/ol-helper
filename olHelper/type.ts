@@ -3,15 +3,6 @@ import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import { SelectEvent, Options as OlSelectOptions } from 'ol/interaction/Select';
 import Geometry from 'ol/geom/Geometry';
-export interface CreateSelectOptions {
-  style?: Style;
-  multi?: boolean;
-  multiSelect?: boolean;
-  layers?: OlSelectOptions['layers'];
-  hitTolerance?: number;
-  cancelFunc?: (event: SelectEvent) => void;
-  selectFunc?: (event: SelectEvent) => void;
-}
 
 // 要高亮的数据
 export interface HighlightInfoType {
@@ -25,4 +16,11 @@ export interface HighlightInfoType {
   selectName: string | null;
   //高亮样式
   style: StyleLike | null;
+}
+
+// 管理图层的属性
+export interface LayerHandlesObject {
+  layerName: string;
+  layer: VectorLayer<VectorSource>;
+  updateFunc: () => void;
 }

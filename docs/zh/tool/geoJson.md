@@ -8,7 +8,7 @@ outline: deep
 
 <script setup>
 import { useData } from 'vitepress';
-import geoJsonTool from '../../components/geoJsonTool.vue';
+import GeoJson from '../../components/tools/geoJson.vue';
 const { site, theme, page, frontmatter } = useData()
 </script>
 

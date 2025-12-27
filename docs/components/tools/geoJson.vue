@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import olHelper, { td4326WMTSPreset } from '../../olHelper/olHelper';
+import olHelper, { td4326WMTSPreset } from '../../../olHelper/olHelper';
 
 onMounted(() => {
   let tdKey = '086d31664864bb1b890c28084f786ca8';
