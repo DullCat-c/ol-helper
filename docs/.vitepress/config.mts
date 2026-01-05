@@ -2,6 +2,7 @@ import { defineConfig } from 'vitepress';
 import UnoCSS from 'unocss/vite';
 import AutoImport from 'unplugin-auto-import/vite';
 import Components from 'unplugin-vue-components/vite';
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -15,24 +16,23 @@ export default defineConfig({
       UnoCSS(),
       // vue自动导入
       AutoImport({
-        resolvers: [],
+        resolvers: [ElementPlusResolver()],
         include: [/\.[tj]sx?$/, /\.vue$/, /\.vue\?vue/],
         imports: ['vue'],
         // 生成 eslint 全局变量定义配置。
         eslintrc: {
-          enabled: false,
-          filepath: './autoImport/.eslintrc-auto-import.json',
+          enabled: true,
+          filepath: '../autoImport/.eslintrc-auto-import.json',
           globalsPropValue: 'readonly',
         },
         // 生成 TypeScript 全局变量定义配置。
-        // dts: './autoImport/auto-imports.d.ts',
-        dts: false,
+        dts: '../autoImport/auto-imports.d.ts',
       }),
 
       Components({
-        resolvers: [],
-        // dts: './autoImport/components.d.ts',
-        dts: false,
+        resolvers: [ElementPlusResolver()],
+        dts: '../autoImport/components.d.ts',
+        // dts: false,
         directoryAsNamespace: true,
       }),
     ],
@@ -66,8 +66,7 @@ export default defineConfig({
       },
       {
         text: '工具',
-        collapsed: false,
-        items: [{ text: '生成geoJson', link: '/zh/tools/geoJson' }],
+        link: '/zh/tool/index',
       },
     ],
 

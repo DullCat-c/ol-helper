@@ -68,9 +68,9 @@ onMounted(() => {
   }
 });
 
-function getterHelper() {
+function getHelper() {
   return _olHelper;
 }
 
-defineExpose({ getterHelper });
+defineExpose({ getHelper });
 </script>

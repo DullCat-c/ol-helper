@@ -15,25 +15,24 @@ export default defineConfig({
     UnoCSS(),
     Components({
       resolvers: [ElementPlusResolver()],
-      // dts: './autoImport/components.d.ts',
-      dts: false,
+      dts: './autoImport/components.d.ts',
+      // dts: false,
       directoryAsNamespace: true,
     }),
     // vue自动导入
     AutoImport({
       resolvers: [ElementPlusResolver()],
-
       include: [/\.[tj]sx?$/, /\.vue$/, /\.vue\?vue/],
-      imports: ['vue', 'vue-router', '@vueuse/core'],
+      imports: ['vue', 'vue-router'],
       // 生成 eslint 全局变量定义配置。
       eslintrc: {
-        enabled: false,
+        enabled: true,
         filepath: './autoImport/.eslintrc-auto-import.json',
         globalsPropValue: 'readonly',
       },
       // 生成 TypeScript 全局变量定义配置。
-      // dts: './autoImport/auto-imports.d.ts',
-      dts: false,
+      dts: './autoImport/auto-imports.d.ts',
+      // dts: false,
     }),
     // mkcert(),
     viteCompression({

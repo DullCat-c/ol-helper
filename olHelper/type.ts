@@ -3,6 +3,7 @@ import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import { SelectEvent, Options as OlSelectOptions } from 'ol/interaction/Select';
 import Geometry from 'ol/geom/Geometry';
+import olHelper from './olHelper';
 
 // 要高亮的数据
 export interface HighlightInfoType {
@@ -10,7 +11,7 @@ export interface HighlightInfoType {
   id: string | number | null;
   //要高亮要素的唯一标识符的key
   idKey: string | null;
-  //图层name
+  //图层名称
   layerName: string | null;
   //select事件的名称
   selectName: string | null;
@@ -24,3 +25,17 @@ export interface LayerHandlesObject {
   layer: VectorLayer<VectorSource>;
   updateFunc: () => void;
 }
+
+// 视图相关属性
+export interface mapViewInfoType {
+  zoom: number;
+  ymin: number;
+  ymax: number;
+  xmin: number;
+  xmax: number;
+  [key: string]: any;
+}
+
+export type drawTypeEnum = 'Point' | 'LineString' | 'Polygon' | 'Circle' | 'Square' | 'Box';
+export type UseDrawReturn = ReturnType<olHelper['useDraw']>;
+export type useSelectReturn = ReturnType<olHelper['useSelect']>;

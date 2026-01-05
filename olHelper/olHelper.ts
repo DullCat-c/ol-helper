@@ -29,10 +29,13 @@ import { click as olSelectClick, singleClick } from 'ol/events/condition';
 import GeoJSON from 'ol/format/GeoJSON';
 import Feature from 'ol/Feature';
 import Geometry from 'ol/geom/Geometry';
-import { HighlightInfoType, LayerHandlesObject } from './type';
+import { drawTypeEnum, HighlightInfoType, LayerHandlesObject, mapViewInfoType } from './type';
 import { highLightStyle } from './presetStyle';
 import { equals } from 'ol/coordinate';
 import { Options as BaseVectorOptions } from 'ol/layer/BaseVector';
+import Draw, { DrawEvent, Options as DrawOptions } from 'ol/interaction/Draw.js';
+import Modify from 'ol/interaction/Modify.js';
+import { createBox, createRegularPolygon } from 'ol/interaction/Draw';
 // import SelectEvent from 'ol/interaction/Select';
 // import  * from './presetConfig'
 export * from './presetConfig';
@@ -237,6 +240,33 @@ export default class olHelper {
     }
   }
 
+  // 获取当前视口信息
+  getMapInfo(options: object = {}): mapViewInfoType {
+    let zoom = this.map.getView().getZoom();
+    let extent = this.map.getView().calculateExtent(this.map.getSize());
+    if (!zoom) {
+      throw Error(`Unable to get map info for zoom ${zoom}`);
+    }
+    return {
+      zoom,
+      xmin: extent[0],
+      ymin: extent[1],
+      xmax: extent[2],
+      ymax: extent[3],
+      ...options,
+    };
+  }
+
+  // 对比地图信息是否一致
+  compareMapInfo(mapInfo1: mapViewInfoType, mapInfo2: mapViewInfoType) {
+    let props = ['zoom', 'xmin', 'ymin', 'ymax', 'xmax'];
+    props.forEach((prop) => {
+      if (mapInfo1[prop] != mapInfo2[prop]) {
+        return false;
+      }
+    });
+    return true;
+  }
   // 对比并设置高亮
   private setHighlightFeature(features: Feature[]) {
     if (this.highlightInfo.id && this.highlightInfo.idKey) {
@@ -371,17 +401,17 @@ export default class olHelper {
     this.map.addInteraction(selectInstance);
 
     // setter 设置选择模式函数
-    function setSelectMod(mod: typeof selectMode) {
+    let setSelectMod = (mod: typeof selectMode) => {
       selectMode = mod;
-    }
+    };
     // getter 获取选择模式函数
-    function getSelectMod() {
+    let getSelectMod = () => {
       return selectMode;
-    }
+    };
     // 设置事件函数
-    function setEventFunc(func: (event: SelectEvent) => void) {
+    let setEventFunc = (func: (event: SelectEvent) => void) => {
       eventFunc = func;
-    }
+    };
 
     return {
       setSelectMod,
@@ -435,5 +465,57 @@ export default class olHelper {
       selectHandles.getFeatures().clear();
     });
     this.highLightLayer.getSource()?.clear();
+  }
+
+  //绘制
+  useDraw(type: drawTypeEnum, options: Partial<DrawOptions> = {}) {
+    let eventFunc = (event: DrawEvent) => {};
+
+    let geometryFunction, maxPoints;
+    if (type === 'Square') {
+      type = 'Circle';
+      //正方形图形（圆）
+      geometryFunction = createRegularPolygon(4);
+    } else if (type === 'Box') {
+      type = 'LineString';
+      maxPoints = 2;
+      geometryFunction = createBox();
+    }
+
+    let presetOptions = {
+      source: new VectorSource(),
+      type: type,
+      //几何信息变更时调用函数
+      geometryFunction: geometryFunction,
+      //最大点数
+      maxPoints: maxPoints,
+      //绘制时阻止点击事件
+      stopClick: true,
+    };
+    Object.assign(presetOptions, options);
+
+    //实例化交互绘制类对象并添加到地图容器中
+    let drawInstance = new Draw(presetOptions);
+    this.map.addInteraction(drawInstance);
+
+    drawInstance.on('drawend', (evt) => {
+      eventFunc(evt);
+    });
+
+    // 设置事件函数
+    let setEventFunc = (func: (event: DrawEvent) => void) => {
+      eventFunc = func;
+    };
+
+    // 清除绘制操作
+    let remove = () => {
+      this.map.removeInteraction(drawInstance);
+    };
+
+    return {
+      drawInstance,
+      setEventFunc,
+      remove,
+    };
   }
 }

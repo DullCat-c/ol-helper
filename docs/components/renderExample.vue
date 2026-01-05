@@ -17,11 +17,16 @@ onMounted(() => {
   _olHelper.map.addLayer(td4326WMTSPreset(tdKey, 'img_c'));
   _olHelper.map.addLayer(td4326WMTSPreset(tdKey, 'cva_c'));
   _olHelper.setMapCenter([111.94199522379412, 31.81211945837647], 18);
-  // let newFeatures = new GeoJSON().readFeatures(geoJsonData);
-  // _olHelper.createUniLayer('test', newFeatures);
+  let newFeatures = new GeoJSON().readFeatures(geoJsonData);
+  _olHelper.createUniLayer('test', newFeatures);
   _olHelper.createUpdateLayer('test', (_layer) => {
-    let newFeatures = new GeoJSON().readFeatures(geoJsonData);
-    _olHelper.updateLayerFromFeatures(newFeatures, _layer);
+    let mapInfo = _olHelper.getMapInfo();
+    getLayer(mapInfo).then((res) => {
+      if (_olHelper.compareMapInfo(mapInfo, _olHelper.getMapInfo())) {
+        let newFeatures = new GeoJSON().readFeatures(res.data);
+        _olHelper.updateLayerFromFeatures(newFeatures, _layer);
+      }
+    });
   });
 
   _olHelper.createUpdateLayer(
@@ -35,18 +40,18 @@ onMounted(() => {
 
   // let a = _olHelper.getLayerByName('test');
   // let aa = a ? [a] : [];
-  _olHelper.createSelect('test', {
-    layers: (_layer) => _layer.get('name') == 'test',
-  });
-
-  let a = _olHelper.createSelect('test2', {
-    // multiSelect: true,
-    layers: (_layer) => _layer.get('name') == 'test2',
-  });
-  a.setSelectMod('multiSelect');
-  // console.log('a.selectMode', a.selectMode);
-  a.setEventFunc((event) => {
-    console.log('111', 111);
-  });
+  // _olHelper.createSelect('test', {
+  //   layers: (_layer) => _layer.get('name') == 'test',
+  // });
+  //
+  // let a = _olHelper.createSelect('test2', {
+  //   // multiSelect: true,
+  //   layers: (_layer) => _layer.get('name') == 'test2',
+  // });
+  // a.setSelectMod('multiSelect');
+  // // console.log('a.selectMode', a.selectMode);
+  // a.setEventFunc((event) => {
+  //   console.log('111', 111);
+  // });
 });
 </script>

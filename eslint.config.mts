@@ -39,7 +39,18 @@ export default defineConfig([
       'no-unused-vars': 'off',
       'prefer-const': 'off',
       '@typescript-eslint/no-unused-vars': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
     },
     languageOptions: autoImportConfig,
+  },
+  {
+    languageOptions: {
+      globals: {
+        ElMessage: 'readonly',
+        ElMessageBox: 'readonly',
+        ElNotification: 'readonly',
+        ElLoading: 'readonly',
+      },
+    },
   },
 ]);

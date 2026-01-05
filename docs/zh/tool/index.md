@@ -3,12 +3,15 @@ outline: deep
 ---
 
 
-<geoJsonTool></geoJsonTool>
+# 空间数据的生成,定位  
+
+<toolCom></toolCom>
 
 
 <script setup>
 import { useData } from 'vitepress';
-import GeoJson from '../../components/tools/geoJson.vue';
+import toolCom from '../../components/tools/toolCom.vue';
 const { site, theme, page, frontmatter } = useData()
 </script>
 
+    
