@@ -21,22 +21,22 @@ onMounted(() => {
   _olHelper.createUniLayer('test', newFeatures);
   _olHelper.createUpdateLayer('test', (_layer) => {
     let mapInfo = _olHelper.getMapInfo();
-    getLayer(mapInfo).then((res) => {
-      if (_olHelper.compareMapInfo(mapInfo, _olHelper.getMapInfo())) {
-        let newFeatures = new GeoJSON().readFeatures(res.data);
-        _olHelper.updateLayerFromFeatures(newFeatures, _layer);
-      }
-    });
+    // getLayer(mapInfo).then((res) => {
+    //   if (_olHelper.compareMapInfo(mapInfo, _olHelper.getMapInfo())) {
+    //     let newFeatures = new GeoJSON().readFeatures(res.data);
+    //     _olHelper.updateLayerFromFeatures(newFeatures, _layer);
+    //   }
+    // });
   });
-
-  _olHelper.createUpdateLayer(
-    'test2',
-    (_layer) => {
-      let newFeatures = new GeoJSON().readFeatures(geoJsonData2);
-      _olHelper.updateLayerFromFeatures(newFeatures, _layer);
-    },
-    highLightStyle2,
-  );
+  //
+  // _olHelper.createUpdateLayer(
+  //   'test2',
+  //   (_layer) => {
+  //     let newFeatures = new GeoJSON().readFeatures(geoJsonData2);
+  //     _olHelper.updateLayerFromFeatures(newFeatures, _layer);
+  //   },
+  //   highLightStyle2,
+  // );
 
   // let a = _olHelper.getLayerByName('test');
   // let aa = a ? [a] : [];

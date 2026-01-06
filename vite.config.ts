@@ -23,7 +23,13 @@ export default defineConfig({
     AutoImport({
       resolvers: [ElementPlusResolver()],
       include: [/\.[tj]sx?$/, /\.vue$/, /\.vue\?vue/],
-      imports: ['vue', 'vue-router'],
+      imports: [
+        'vue',
+        'vue-router',
+        {
+          'element-plus/es': ['ElMessage', 'ElMessageBox', 'ElNotification', 'ElLoading'],
+        },
+      ],
       // 生成 eslint 全局变量定义配置。
       eslintrc: {
         enabled: true,

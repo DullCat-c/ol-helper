@@ -12,6 +12,9 @@ export default defineConfig({
   // 添加 head 配置
   head: [['link', { rel: 'icon', href: '/ol-helper/logo.ico' }]],
   vite: {
+    ssr: {
+      noExternal: ['element-plus'],
+    },
     plugins: [
       UnoCSS(),
       // vue自动导入
@@ -42,7 +45,6 @@ export default defineConfig({
       }),
     ],
   },
-
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
