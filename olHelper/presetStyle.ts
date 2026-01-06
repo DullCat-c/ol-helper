@@ -28,7 +28,7 @@ export const walkDrawStyle = new Style({
   zIndex: 99999,
 });
 
-// 原生绘制样式
+// 高亮样式
 export const highLightStyle = new Style({
   // 绘制几何图形的样式
   fill: new Fill({

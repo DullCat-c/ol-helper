@@ -34,7 +34,7 @@ import { highLightStyle } from './presetStyle';
 import { equals } from 'ol/coordinate';
 import { Options as BaseVectorOptions } from 'ol/layer/BaseVector';
 import Draw, { DrawEvent, Options as DrawOptions } from 'ol/interaction/Draw.js';
-import Modify from 'ol/interaction/Modify.js';
+import Modify, { ModifyEvent, Options as ModifyOptions } from 'ol/interaction/Modify.js';
 import { createBox, createRegularPolygon } from 'ol/interaction/Draw';
 // import SelectEvent from 'ol/interaction/Select';
 // import  * from './presetConfig'
@@ -51,6 +51,7 @@ export default class olHelper {
   // 高亮层,没有自身的style,只用于不被declutter
   highLightLayer = new VectorLayer({
     properties: { name: 'highLightLayer' },
+    style: highLightStyle,
     source: new VectorSource({
       features: [],
     }),
@@ -517,5 +518,38 @@ export default class olHelper {
       setEventFunc,
       remove,
     };
+  }
+
+  // 创建修改操作
+  useModify(options: ModifyOptions = {}) {
+    let modifyInstance = new Modify({
+      source: this.highLightLayer.getSource()!,
+    });
+    modifyInstance.on('modifyend', (evt) => {
+      eventFunc(evt);
+    });
+    this.map.addInteraction(modifyInstance);
+
+    let eventFunc = (event: ModifyEvent) => {};
+    // 设置事件函数
+    let setEventFunc = (func: (event: ModifyEvent) => void) => {
+      eventFunc = func;
+    };
+
+    // 清除编辑操作
+    let remove = () => {
+      this.map.removeInteraction(modifyInstance);
+    };
+
+    return {
+      modifyInstance,
+      setEventFunc,
+      remove,
+    };
+  }
+
+  // 清空绘制图层,便于使用
+  clearHighLightSource() {
+    this.highLightLayer.getSource()?.clear();
   }
 }

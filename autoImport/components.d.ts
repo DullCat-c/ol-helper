@@ -7,6 +7,8 @@ export {};
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    ElButton: (typeof import('element-plus/es'))['ElButton'];
+    ElInput: (typeof import('element-plus/es'))['ElInput'];
     ElRadioButton: (typeof import('element-plus/es'))['ElRadioButton'];
     ElRadioGroup: (typeof import('element-plus/es'))['ElRadioGroup'];
   }
