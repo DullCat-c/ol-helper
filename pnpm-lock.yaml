@@ -11,18 +11,9 @@ importers:
       element-plus:
         specifier: ^2.13.0
         version: 2.13.0(vue@3.5.24(typescript@5.9.3))
-      lint-staged:
-        specifier: ^16.2.7
-        version: 16.2.7
-      postcss-html:
-        specifier: ^1.8.0
-        version: 1.8.0
-      stylelint-order:
-        specifier: ^7.0.0
-        version: 7.0.0(stylelint@16.26.1(typescript@5.9.3))
-      typescript:
-        specifier: ^5.9.3
-        version: 5.9.3
+      ol:
+        specifier: ^7.5.2
+        version: 7.5.2
       vue:
         specifier: ^3.5.24
         version: 3.5.24(typescript@5.9.3)
@@ -66,9 +57,12 @@ importers:
       jiti:
         specifier: ^2.6.1
         version: 2.6.1
-      ol:
-        specifier: ^7.5.2
-        version: 7.5.2
+      lint-staged:
+        specifier: ^16.2.7
+        version: 16.2.7
+      postcss-html:
+        specifier: ^1.8.0
+        version: 1.8.0
       prettier:
         specifier: ^3.4.2
         version: 3.6.2
@@ -78,6 +72,12 @@ importers:
       stylelint-config-standard:
         specifier: ^39.0.1
         version: 39.0.1(stylelint@16.26.1(typescript@5.9.3))
+      stylelint-order:
+        specifier: ^7.0.0
+        version: 7.0.0(stylelint@16.26.1(typescript@5.9.3))
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
       typescript-eslint:
         specifier: ^8.48.0
         version: 8.48.0(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3)
