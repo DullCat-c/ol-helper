@@ -483,7 +483,7 @@ export default class olHelper {
     }
 
     let presetOptions = {
-      source: new VectorSource(),
+      source: this.highLightLayer.getSource()!,
       type: type,
       //几何信息变更时调用函数
       geometryFunction: geometryFunction,

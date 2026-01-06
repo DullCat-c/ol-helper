@@ -4,6 +4,7 @@ import type { Theme } from 'vitepress';
 import DefaultTheme from 'vitepress/theme';
 import './style.css';
 import 'virtual:uno.css';
+import 'element-plus/es/components/message/style/css';
 
 export default {
   extends: DefaultTheme,

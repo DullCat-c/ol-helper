@@ -23,6 +23,7 @@ function startDraw() {
     draw.remove();
   }
   draw = _olHelper.useDraw(drawType.value);
+  draw.setEventFunc((event) => {});
 }
 </script>
 
