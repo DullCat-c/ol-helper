@@ -67,8 +67,8 @@ export default defineConfig({
         items: [
           { text: '创建一个实例', link: '/zh/basic/makeMap' },
           { text: '空间数据的渲染,更新,高亮', link: '/zh/basic/render' },
-          { text: '绘制,编辑', link: '/zh/basic/draw' },
-          { text: '控件', link: '/zh/basic/controller' },
+          { text: '点击事件', link: '/zh/basic/select' },
+          { text: '绘制和编辑', link: '/zh/basic/draw' },
         ],
       },
       {

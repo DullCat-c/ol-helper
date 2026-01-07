@@ -83,12 +83,155 @@ function renderFromData() {
   }
 }
 
+let dialogVisible = ref(false);
 // let
-// let proptity = ref(['Option A', 'Option B']);
+let propertiesChecked = ref<string[]>([]);
+let propertiesList = ref([
+  {
+    key: '',
+    value: '',
+    id: randomString(6),
+  },
+]);
+
+function addProperty() {
+  propertiesList.value.push({
+    key: '',
+    value: '',
+    id: randomString(6),
+  });
+}
+
+function deleteProperty(index: number) {
+  propertiesList.value.splice(index, 1);
+}
+
+// 移除要素的properties
+function removeFeatureProperties() {
+  let fs = _olHelper.highLightLayer.getSource()?.getFeatures();
+  fs?.forEach((feature) => {
+    let keys = feature.getKeys().filter((key) => key !== 'geometry');
+    keys.forEach((key) => {
+      feature.unset(key);
+    });
+    feature.setId(undefined);
+  });
+  startGenerate();
+}
+
+// 添加要素的properties
+function addFeatureProperties() {
+  let fs = _olHelper.highLightLayer.getSource()?.getFeatures();
+  let properties = propertiesList.value
+    .filter((item) => propertiesChecked.value.includes(item.id))
+    .reduce((acc: { [key: string]: string }, cur) => {
+      console.log('cur', cur);
+      acc[cur.key] = cur.value;
+      return acc;
+    }, {});
+  console.log('fs', fs);
+  fs?.forEach((feature) => {
+    feature.setProperties(properties);
+    if (idInfo.checked) {
+      feature.setId(idInfo.id + randomString(6));
+    }
+  });
+  startGenerate();
+}
+
+let idInfo = reactive({
+  checked: false,
+  id: '',
+});
+
+// 生成指定长度的随机字符串
+function randomString(length: number) {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  for (let i = 0; i < length; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+}
+
+// 天地图接口搜索
+let loading = ref(false);
+let selectData = ref({});
+let remoteOptions = ref<
+  {
+    address: string;
+    gbCode: string;
+    lonlat: string;
+    name: string;
+  }[]
+>([]);
+function remoteMethod(keyword: string) {
+  if (!keyword.length) {
+    return;
+  }
+  let mapPack = _olHelper.getMapInfo();
+  let param = {
+    keyWord: keyword,
+    start: 0,
+    count: 30,
+    queryType: 4,
+    level: mapPack.zoom.toString(),
+    mapBound: [mapPack.xmax, mapPack.ymax, mapPack.xmin, mapPack.ymin].join(','),
+  };
+  loading.value = true;
+  getTianditu(param).then((res) => {
+    loading.value = false;
+    remoteOptions.value = res?.suggests ?? [];
+  });
+}
+
+function jumpTianditu(value: string) {
+  let item = JSON.parse(value);
+  if (item?.lonlat) {
+    let pointArr = item.lonlat.split(',');
+    _olHelper.wktTempRender(`POINT(${pointArr[0]} ${pointArr[1]})`);
+  } else {
+    ElMessage.error('该地名暂无定位!');
+  }
+}
+
+// 天地图搜索接口
+async function getTianditu(postStr: TianDiTuSearchStrParam) {
+  const params = new URLSearchParams({
+    postStr: JSON.stringify(postStr),
+    type: 'query',
+    tk: 'eff04facf768eb72adaea1adfe2f5614',
+  });
+  let f = await fetch(`https://api.tianditu.gov.cn/v2/search?${params}`);
+  return f.json();
+}
+interface TianDiTuSearchStrParam {
+  keyWord: string;
+  level: string;
+  mapBound: string;
+  queryType: number;
+  start: number;
+  count: number;
+}
 </script>
 
 <template>
-  <div class="flex items-center my-4 gap-x-2">
+  <div class="flex items-center my-4 gap-col-2">
+    <div>搜索天地图地名:</div>
+    <el-select
+      v-model="selectData"
+      filterable
+      @change="jumpTianditu"
+      remote
+      placeholder="输入关键字"
+      :remote-method="remoteMethod"
+      :loading="loading"
+      style="width: 240px">
+      <el-option v-for="item in remoteOptions" :key="item.gbCode" :label="item.name" :value="JSON.stringify(item)" />
+    </el-select>
+  </div>
+
+  <div class="flex items-center my-4 gap-x-2 flex-wrap gap-y-2">
     <span>绘制:</span>
     <el-radio-group v-model="drawType" text-color="#fff" fill="#6c6cff" @change="startDraw">
       <el-radio-button label="点" value="Point" />
@@ -110,8 +253,9 @@ function renderFromData() {
       >
     </div>
   </div>
+
   <switchBaseLayerExample ref="mapRef"></switchBaseLayerExample>
-  <div class="flex items-center my-4 gap-x-2">
+  <div class="flex items-center my-4 gap-x-2 flex-wrap gap-y-2">
     <span>数据:</span>
     <el-radio-group v-model="generateType" text-color="#fff" fill="#6c6cff" @change="startGenerate">
       <el-radio-button label="wkt" value="wkt" />
@@ -120,24 +264,45 @@ function renderFromData() {
     <div>
       <el-button @click="generateData = ''" type="primary">清空数据</el-button>
       <el-button @click="renderFromData" type="success">渲染</el-button>
-      <el-button
-        @click="
-          draw?.remove();
-          drawType = '';
-        "
-        type="danger"
-        >结束绘制</el-button
-      >
+      <el-button @click="dialogVisible = true" type="primary" v-if="generateType === 'geojson'">设置properties</el-button>
     </div>
   </div>
 
-  <!--  <el-checkbox-group v-model="checkList">-->
-  <!--    <el-checkbox label="Option A" value="Value A" />-->
-  <!--    <el-checkbox label="Option B" value="Value B" />-->
-  <!--    <el-checkbox label="Option C" value="Value C" />-->
-  <!--  </el-checkbox-group>-->
-
   <el-input v-model="generateData" :rows="20" type="textarea" resize="none" />
+
+  <el-dialog v-model="dialogVisible" title="设置properties" width="400" align-center>
+    <div class="mb-2">
+      <el-button type="primary" @click="addProperty"> 添加属性 </el-button>
+    </div>
+    <div class="h-40vh overflow-y-auto">
+      <el-checkbox v-model="idInfo.checked" class="">
+        <el-input v-model="idInfo.id" class="">
+          <template #prepend>前缀</template>
+          <template #append>随机值</template>
+        </el-input>
+      </el-checkbox>
+      <el-checkbox-group v-model="propertiesChecked">
+        <el-checkbox :value="properties.id" v-for="(properties, index) in propertiesList" :key="properties.id" class="my-2 !mr-0">
+          <template class="flex items-center gap-x-4">
+            <el-input v-model="properties.key">
+              <template #prepend>键</template>
+            </el-input>
+            <el-input v-model="properties.value">
+              <template #prepend>值</template>
+            </el-input>
+            <el-button type="danger" text bg @click="deleteProperty(index)">删除</el-button>
+          </template>
+        </el-checkbox>
+      </el-checkbox-group>
+    </div>
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button type="primary" @click="removeFeatureProperties"> 移除所有属性 </el-button>
+        <el-button type="primary" @click="addFeatureProperties"> 注入 </el-button>
+        <el-button @click="dialogVisible = false">关闭</el-button>
+      </div>
+    </template>
+  </el-dialog>
 </template>
 
 <style scoped></style>

@@ -2,22 +2,18 @@
 outline: deep
 ---
 
-# 绘制
+# 绘制和编辑
 
 ## 绘制
-
-````html
-<div id="map" style="height: 50vh;width: 50vw;"></div>
-````
 ````js
-//实例化,传入dom id, 会把地图canvas挂载到dom节点上
-//每次实例化会生成一个新的实例,需要复用请保存或传值,重复实例化会使以前的实例化对象失效
-let mapInstance = new olHelper('map');
 
 ````
 
+## 编辑
 
 
+
+## 相关函数
 
 <aCom></aCom>
 <script setup>

@@ -32,7 +32,7 @@ export const walkDrawStyle = new Style({
 export const highLightStyle = new Style({
   // 绘制几何图形的样式
   fill: new Fill({
-    color: 'rgba(255, 0, 0)',
+    color: 'rgba(255, 0, 0,0.1)',
   }),
   stroke: new Stroke({
     color: 'rgba(255, 0, 0)',

@@ -21,7 +21,7 @@ import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import olSelect from 'ol/interaction/Select';
 import { Options as OlSelectOptions, SelectEvent } from 'ol/interaction/Select';
-import Style from 'ol/style/Style';
+import Style, { StyleLike } from 'ol/style/Style';
 import WKT from 'ol/format/WKT.js';
 import { circular } from 'ol/geom/Polygon';
 import { defaults as defaultInteractions } from 'ol/interaction';
@@ -175,6 +175,24 @@ export default class olHelper {
     return _layer;
   }
 
+  // wkt临时渲染
+  wktTempRender(wkt: string, name?: string, style?: StyleLike) {
+    let f = new WKT().readFeature(wkt);
+    if (name) {
+      f.set('name', name);
+    }
+    this.highLightLayer.getSource()?.clear();
+    this.highLightLayer.getSource()?.addFeature(f);
+    this.map.getView().fit(f.getGeometry()!.getExtent(), { padding: [50, 50, 50, 50] });
+    // if (style) {
+    //   if (typeof this.highlightInfo.style === 'function') {
+    //     f.setStyle(style(f, this.map.getView().getResolution()!)!);
+    //   } else {
+    //     f.setStyle(style);
+    //   }
+    // }
+  }
+
   /**
    * @description: 创建图层
    * @param layerName 图层名称
@@ -300,14 +318,14 @@ export default class olHelper {
   // 重置高亮
   resetHighLightInfo() {
     this.highlightInfo = {
-      id: null, //要高亮要素的唯一标识值
+      id: null, //要高亮要素的唯一标识值,必传
       idKey: null, //要高亮要素的唯一标识符的key
       layerName: null, //图层name
       selectName: null, //select事件的名称
       style: null, //高亮样式
     };
   }
-  // 定位并且高亮要素
+  // 定位并且高亮加载的要素
   locateAndHighlight(wkt: WKT, highlightInfo: HighlightInfoType) {
     if (!(this.highlightInfo.id && this.highlightInfo.idKey && this.highlightInfo.layerName && wkt)) {
       throw Error(`Please input the correct parameters.`);
