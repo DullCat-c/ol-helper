@@ -175,22 +175,21 @@ export default class olHelper {
     return _layer;
   }
 
-  // wkt临时渲染
-  wktTempRender(wkt: string, name?: string, style?: StyleLike) {
+  // wkt临时渲染,加入高亮图层并定位
+  wktTempRender(wkt: string, properties?: object, style?: StyleLike) {
     let f = new WKT().readFeature(wkt);
-    if (name) {
-      f.set('name', name);
+    if (properties) {
+      f.setProperties(properties);
     }
-    this.highLightLayer.getSource()?.clear();
     this.highLightLayer.getSource()?.addFeature(f);
-    this.map.getView().fit(f.getGeometry()!.getExtent(), { padding: [50, 50, 50, 50] });
-    // if (style) {
-    //   if (typeof this.highlightInfo.style === 'function') {
-    //     f.setStyle(style(f, this.map.getView().getResolution()!)!);
-    //   } else {
-    //     f.setStyle(style);
-    //   }
-    // }
+    this.map.getView().fit(f.getGeometry()!.getExtent(), { padding: [100, 100, 100, 100] });
+    if (style) {
+      if (typeof style === 'function') {
+        f.setStyle(style(f, this.map.getView().getResolution()!)!);
+      } else {
+        f.setStyle(style);
+      }
+    }
   }
 
   /**
