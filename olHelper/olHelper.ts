@@ -539,9 +539,11 @@ export default class olHelper {
 
   // 创建修改操作
   useModify(options: ModifyOptions = {}) {
-    let modifyInstance = new Modify({
+    let presetOptions = {
       source: this.highLightLayer.getSource()!,
-    });
+    };
+    Object.assign(presetOptions, options);
+    let modifyInstance = new Modify(presetOptions);
     modifyInstance.on('modifyend', (evt) => {
       eventFunc(evt);
     });
