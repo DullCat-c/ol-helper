@@ -431,7 +431,13 @@ export default class olHelper {
       eventFunc = func;
     };
 
+    // 清除绘制操作
+    let remove = () => {
+      this.map.removeInteraction(selectInstance);
+      this.selectHandles.delete(name);
+    };
     return {
+      remove,
       setSelectMod,
       getSelectMod,
       setEventFunc,

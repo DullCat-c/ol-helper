@@ -4,14 +4,27 @@ outline: deep
 
 # 绘制和编辑
 
-
-
 # 用法
 
 绘制和编辑操作使用hook函数
 
 ````js
+// 创建draw事件和修改事件,这两个事件都是用的highlightLayer图层,绘制之后可以直接编辑
+let draw = _olHelper.useDraw(drawType);
+let modify = _olHelper.useModify();
 
+// 设置绘制事件回调函数
+draw.setEventFunc((event) => {
+  // 这个回调在上图层之前,所以如果需要操作绘制图层,请使用setTimeout
+  setTimeout(() => {
+  }, 100);
+});
+
+// 编辑同理
+modify.setEventFunc((event) => {
+  setTimeout(() => {
+  }, 100);
+});
 
 
 ````
