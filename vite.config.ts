@@ -6,6 +6,7 @@ import { resolve } from 'path';
 import AutoImport from 'unplugin-auto-import/vite';
 import viteCompression from 'vite-plugin-compression';
 import UnoCSS from 'unocss/vite';
+import dts from 'vite-plugin-dts';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -41,10 +42,15 @@ export default defineConfig({
       // dts: './autoImport/auto-imports.d.ts',
       dts: false,
     }),
-    // mkcert(),
-    viteCompression({
-      threshold: 1024, // 对大于 1kb 的文件进行压缩
+    dts({
+      insertTypesEntry: true, // 在生成的包的根目录中插入一个类型入口文件
+      include: ['olHelper/olHelper.ts'],
+      outDir: 'dist',
     }),
+    // mkcert(),
+    // viteCompression({
+    //   threshold: 1024, // 对大于 1kb 的文件进行压缩
+    // }),
   ],
 
   build: {
@@ -53,11 +59,12 @@ export default defineConfig({
       entry: resolve(__dirname, 'olHelper/olHelper.ts'),
       // 库名称
       name: 'ol-helper',
+      formats: ['es', 'umd', 'cjs'], // 多种格式
       // 输出文件名
       fileName: (format) => `ol-helper.${format}.js`,
     },
     // 生成 sourcemap
-    sourcemap: true,
+    // sourcemap: true,
   },
   resolve: {
     alias: {
