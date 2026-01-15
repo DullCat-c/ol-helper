@@ -493,6 +493,7 @@ export default class olHelper {
       setSelectMod,
       getSelectMod,
       setEventFunc,
+      selectInstance,
     };
   }
 

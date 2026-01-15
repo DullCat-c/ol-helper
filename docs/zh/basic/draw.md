@@ -67,7 +67,7 @@ modify.setEventFunc((event) => {
 
 | 名称      |    详情    |     类型     |  
 |---------|:--------:|:----------:|
-| modifyInstance   |   编辑实例   |  `Modify`  |   
+| modifyInstance   |   ol原生编辑实例   |  `Modify`  |   
 | setEventFunc  | 设置事件回调函数 | `function` |
 | remove |  移除编辑事件  | `function` |
 
