@@ -2,10 +2,11 @@
 outline: deep
 ---
 
-## 选择事件
+# 选择事件
 
+## 创建点击事件
 
-
+## 
 `useSelect(name,options)`
 
 创建选择事件,会将创建的实例放入`selectHandles`属性中,以方便管理(考虑到会存在多个选择事件,并且多个图层可能会有同一个点,需要实现互斥)
@@ -26,12 +27,11 @@ outline: deep
 | remove |  移除绘制事件  |         `function`         |
 
 
-
-
+## 根据业务自由设置select状态
 
 `setSelectActive(activeLayerNameArray,inactiveLayerNameArray)`
 
-自由设置select状态
+根据业务自由设置select状态
 
 | 名称      |                 详情                 |      类型       | 默认 |
 |---------|:----------------------------------:|:-------------:|:--:|
@@ -40,9 +40,8 @@ outline: deep
 
 
 
-
 `clearAllSelect()`
-移除所有选择事件
+移除所有选择要素
 
 
 

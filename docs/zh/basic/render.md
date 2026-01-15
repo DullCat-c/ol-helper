@@ -12,7 +12,7 @@ outline: deep
 各种类型的空间数据可以用`openlayers`的`ol\format\*`类来转换成`Feature`
 
 
-## 渲染要素
+## 创建图层
 
 创建一个图层并将空间数据一次性加载到地图上
 
@@ -47,10 +47,19 @@ _olHelper.createUpdateLayer('test', (_layer) => {
 
 ````
 
+## 渲染临时要素
+
+将要素加入进内置的`highLightLayer`图层,再高亮其他要素时会自动清除,可一次性高亮多个要素
+
+````js
+    _olHelper.wktTempRender(`POINT(114.39293331646354 30.50944437070846)`);
+````
+
+
 
 ## 定位并高亮要素
 
-根据图层... 来定位某个要素
+根据图层名,要素唯一标识符,要素的唯一标识符的值来定位某个要素,同时也可以将要素加入select事件
 
 <renderExample></renderExample>
 
@@ -63,7 +72,7 @@ _olHelper.createUpdateLayer('test', (_layer) => {
 
 | 名称      |                        详情                        |    类型     | 默认 |
 |---------|:------------------------------------------------:|:---------:|:--:|
-| layerName   |                       图层名称                       | `string`  | -  |
+| <span style="color:red">*</span>layerName   |                       图层名称                       | `string`  | -  |
 | features  |                     要加载的要素数组                     |  `Feature[]`   | [] |
 | options | openlayers创建`ol/layer/Vector`类的初始化参数,用以覆盖函数的预设参数 | `BaseVectorOptions<VectorSource>` | {} |
 
@@ -73,13 +82,13 @@ _olHelper.createUpdateLayer('test', (_layer) => {
 
 | 名称      |                        详情                        |                        类型                         |      默认      |
 |---------|:------------------------------------------------:|:-------------------------------------------------:|:------------:|
-| layerName   |                       图层名称                       |                     `string`                      |      -       |
-| update  |               获取新视口要素的函数,将在视口变动后调用               | `(_layer: VectorLayer<VectorSource>)=> void` | (_layer)=>{} |
+| <span style="color:red">*</span>layerName   |                       图层名称                       |                     `string`                      |      -       |
+| <span style="color:red">*</span>update  |               获取新视口要素的函数,将在视口变动后调用               | `(_layer: VectorLayer<VectorSource>)=> void` | (_layer)=>{} |
 | options | openlayers创建`ol/layer/Vector`类的初始化参数,用以覆盖函数的预设参数 |         `BaseVectorOptions<VectorSource>`         |      {}      |
 
 
 `getMapInfo(options)`  
-获取当前视口信息,并将options融入进返回的对象
+获取当前视口信息,并将options融入进返回的对象,用于请求当前改显示的数据
 
 返回:
 
@@ -96,24 +105,33 @@ _olHelper.createUpdateLayer('test', (_layer) => {
 对比两个视口信息是否一致,返回boolean
 
 
-`locateAndHighlight(wkt, highlightInfo)`  
-定位并且高亮要素
+`locateAndHighlight(highlightInfo,wkt)`  
+定位并且高亮要素,如果缺少wkt则直接在图层里找已存在的要素
 
 | 名称      |   详情   |                        类型                         | 默认 |
 |---------|:------:|:-------------------------------------------------:|:--:|
+| <span style="color:red">*</span>highlightInfo  | 高亮信息对象 | `HighlightInfoType` | -  |
 | wkt   | wkt字符串 |                     `string`                      | -  |
-| highlightInfo  | 高亮信息对象 | `HighlightInfoType` | -  |
 
 `HighlightInfoType`类型
 
-| 名称         |       详情        |           类型            |   
-|------------|:---------------:|:-----------------------:|
-| id         |   要高亮要素的唯一标识值   | `string    \|  number ` |  
-| idKey      | 要高亮要素的唯一标识符的key |        `string`         | 
-| layerName  |      图层名称       |        `string`         |  
-| selectName | 要加入的select事件的名称 |    `string \| null`     | 
-| style      |      高亮样式       |   `StyleLike \| null`   |  
+| 名称                                 |       详情        |           类型            |   
+|------------------------------------|:---------------:|:-----------------------:|
+| <span style="color:red">*</span>id |  要高亮要素的唯一标识符的值  | `string    \|  number ` |  
+| <span style="color:red">*</span>idKey                              | 要高亮要素的唯一标识符的key |        `string`         | 
+| <span style="color:red">*</span>layerName                          |      图层名称       |        `string`         |  
+| selectName                         | 要加入的select事件的名称 |    `string \| null`     | 
 
+
+
+`wktTempRender(wkt, properties, style)`  
+wkt临时渲染要素,加入高亮图层并定位
+
+| 名称        |     详情     |                类型                 |        默认        |
+|-----------|:----------:|:---------------------------------:|:----------------:|
+|  <span style="color:red">*</span>wkt      | wkt格式的空间信息 |             `string`              |        -         |
+| properties |   要素属性信息   |             `object`              |        {}        |
+| style     |   ol原生样式   | `StyleLike` | `highLightStyle` |
 
 
 
@@ -123,7 +141,6 @@ _olHelper.createUpdateLayer('test', (_layer) => {
 <script setup>
 import { useData } from 'vitepress';
 import renderExample from '../../components/renderExample.vue';
-import aCom from '../../components/aCom.vue';
 const { site, theme, page, frontmatter } = useData()
 </script>
 

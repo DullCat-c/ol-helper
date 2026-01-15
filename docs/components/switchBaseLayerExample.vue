@@ -33,8 +33,6 @@ onMounted(() => {
 
   _olHelper.setMapCenter([114.393569, 30.50846], 18);
 
-  // _olHelper.map.a = 1;
-  // console.log('_olHelper', _olHelper);
   // 获取DOM元素
   const option1: HTMLInputElement = document.getElementById('img') as HTMLInputElement;
   const option2: HTMLInputElement = document.getElementById('vec') as HTMLInputElement;

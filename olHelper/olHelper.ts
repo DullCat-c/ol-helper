@@ -64,7 +64,6 @@ export default class olHelper {
     idKey: null, //要高亮要素的唯一标识符的key
     layerName: null, //图层name
     selectName: null, //select事件的名称
-    style: null, //高亮样式
   };
 
   // 单例
@@ -127,7 +126,7 @@ export default class olHelper {
   }
 
   // wkt 定位
-  toWkt(wkt: WKT) {
+  toWkt(wkt: string) {
     let geometry = new WKT().readGeometry(wkt);
     this.map.getView().fit(geometry.getExtent(), { padding: [50, 50, 50, 50] });
   }
@@ -175,21 +174,25 @@ export default class olHelper {
     return _layer;
   }
 
-  // wkt临时渲染,加入高亮图层并定位
-  wktTempRender(wkt: string, properties?: object, style?: StyleLike) {
-    let f = new WKT().readFeature(wkt);
-    if (properties) {
-      f.setProperties(properties);
-    }
-    this.highLightLayer.getSource()?.addFeature(f);
-    this.map.getView().fit(f.getGeometry()!.getExtent(), { padding: [100, 100, 100, 100] });
-    if (style) {
-      if (typeof style === 'function') {
-        f.setStyle(style(f, this.map.getView().getResolution()!)!);
-      } else {
-        f.setStyle(style);
+  // wkt临时渲染要素,加入高亮图层并定位
+  wktTempRender(wkt: string | string[], properties?: object, style?: StyleLike) {
+    wkt = Array.isArray(wkt) ? wkt : [wkt];
+    let fs = new WKT().readFeatures(wkt);
+
+    fs.forEach((f) => {
+      if (properties) {
+        f.setProperties(properties);
       }
-    }
+      this.highLightLayer.getSource()?.addFeature(f);
+      if (style) {
+        if (typeof style === 'function') {
+          f.setStyle(style(f, this.map.getView().getResolution()!)!);
+        } else {
+          f.setStyle(style);
+        }
+      }
+    });
+    this.locateFeature(fs);
   }
 
   /**
@@ -287,31 +290,42 @@ export default class olHelper {
   }
   // 对比并设置高亮
   private setHighlightFeature(features: Feature[]) {
+    let feature;
     if (this.highlightInfo.id && this.highlightInfo.idKey) {
-      features.forEach((f) => {
-        if (this.highlightInfo.id === f.get(this.highlightInfo.idKey!)) {
+      // console.log('this.highlightInfo', this.highlightInfo);
+      for (let i = 0; i < features.length; i++) {
+        let f = features[i];
+        let id = f.get(this.highlightInfo.idKey!);
+        if (this.highlightInfo.idKey == 'id' && !id) {
+          id = f.getId();
+        }
+        if (this.highlightInfo.id === id) {
           // 加入的对应的点击事件,没有就加入到高亮图层
           if (this.highlightInfo.selectName) {
             let selectHandles = this.selectHandles.get(this.highlightInfo.selectName);
             selectHandles?.getFeatures().clear();
             selectHandles?.getFeatures().push(f);
           } else {
-            this.highLightLayer.getSource()?.clear(true);
+            this.highLightLayer.getSource()?.clear();
             this.highLightLayer.getSource()?.addFeature(f);
           }
 
           // 是否有自定义style
-          if (this.highlightInfo.style) {
-            if (typeof this.highlightInfo.style === 'function') {
-              f.setStyle(this.highlightInfo.style(f, this.map.getView().getResolution()!)!);
-            } else {
-              f.setStyle(this.highlightInfo.style);
-            }
-          }
+          // if (this.highlightInfo.style) {
+          //   f.set('beforeStyle', f.getStyle());
+          //   if (typeof this.highlightInfo.style === 'function') {
+          //     f.setStyle(this.highlightInfo.style(f, this.map.getView().getResolution()!)!);
+          //   } else {
+          //     f.setStyle(this.highlightInfo.style);
+          //   }
+          // }
+          feature = f;
           this.resetHighLightInfo();
+          break;
         }
-      });
+      }
     }
+    return feature;
   }
 
   // 重置高亮
@@ -321,28 +335,66 @@ export default class olHelper {
       idKey: null, //要高亮要素的唯一标识符的key
       layerName: null, //图层name
       selectName: null, //select事件的名称
-      style: null, //高亮样式
     };
   }
-  // 定位并且高亮加载的要素
-  locateAndHighlight(wkt: WKT, highlightInfo: HighlightInfoType) {
-    if (!(this.highlightInfo.id && this.highlightInfo.idKey && this.highlightInfo.layerName && wkt)) {
+  // 定位并且高亮按视口加载的要素
+  locateAndHighlight(highlightInfo: HighlightInfoType, wkt?: string) {
+    if (!(highlightInfo.id && highlightInfo.idKey && highlightInfo.layerName)) {
       throw Error(`Please input the correct parameters.`);
     }
     // 定位,并且保存定位前后的坐标点
     Object.assign(this.highlightInfo, highlightInfo);
+
+    let findCode = () => {
+      let layer = this.getLayerByName(highlightInfo.layerName!);
+      if (layer && layer instanceof VectorLayer) {
+        let features: Feature[] = layer?.getSource()?.getFeatures() ?? [];
+        let f = this.setHighlightFeature(features);
+        if (f) this.locateFeature(f);
+      }
+    };
+
+    // 如果没有wkt,直接在图层里找
+    if (!wkt) {
+      findCode();
+      return;
+    }
+
     let oldCenter = this.map.getView().getCenter() ?? null;
-    let geometry = new WKT().readGeometry(wkt);
-    this.map.getView().fit(geometry.getExtent(), { padding: [50, 50, 50, 50] });
+    let f = new WKT().readFeature(wkt);
+    this.locateFeature(f);
     let center = this.map.getView().getCenter() ?? null;
 
     // 如果地图没有移动,此时不会走到加载要素然后对比的函数里,所以在这里抓取当前视口的要素进行对比
     if (oldCenter && center && equals(oldCenter, center)) {
-      let layer = this.layerHandles.get(this.highlightInfo.layerName)?.layer;
-      if (layer) {
-        let features = layer.getSource()?.getFeatures() ?? [];
-        this.setHighlightFeature(features);
-      }
+      findCode();
+    }
+  }
+
+  // 定位要素
+  locateFeature(f: Feature | Feature[]) {
+    if (!f) return;
+    // Convert single feature to array for consistent handling
+    const features = Array.isArray(f) ? f : [f];
+    if (features.length === 0) return;
+
+    // Calculate combined extent of all features
+    let combinedExtent = features[0].getGeometry()!.getExtent();
+    // console.log('combinedExtent', combinedExtent);
+    features.slice(1).forEach((feature) => {
+      olExtent.extend(combinedExtent, feature.getGeometry()!.getExtent());
+    });
+    // console.log('combinedExtent', combinedExtent);
+
+    // 判断是否为点要素或范围极小的要素
+    if (olExtent.getWidth(combinedExtent) === 0) {
+      this.map.getView().fit(combinedExtent, {
+        maxZoom: 18,
+      });
+    } else {
+      this.map.getView().fit(combinedExtent, {
+        padding: [100, 100, 100, 100],
+      });
     }
   }
 
@@ -483,7 +535,7 @@ export default class olHelper {
     }
   }
 
-  //清除所有选择
+  //清除所有选择要素
   clearAllSelect() {
     this.selectHandles.forEach((selectHandles) => {
       selectHandles.getFeatures().clear();

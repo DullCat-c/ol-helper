@@ -29,18 +29,20 @@ export default defineConfig({
         ],
         // 生成 eslint 全局变量定义配置。
         eslintrc: {
-          enabled: true,
+          // enabled: true,
+          enabled: false,
           filepath: '../autoImport/.eslintrc-auto-import.json',
           globalsPropValue: 'readonly',
         },
         // 生成 TypeScript 全局变量定义配置。
-        dts: '../autoImport/auto-imports.d.ts',
+        // dts: '../autoImport/auto-imports.d.ts',
+        dts: false,
       }),
 
       Components({
         resolvers: [ElementPlusResolver()],
-        dts: '../autoImport/components.d.ts',
-        // dts: false,
+        // dts: '../autoImport/components.d.ts',
+        dts: false,
         directoryAsNamespace: true,
       }),
     ],

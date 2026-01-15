@@ -15,8 +15,6 @@ export interface HighlightInfoType {
   layerName: string | null;
   //select事件的名称
   selectName: string | null;
-  //高亮样式
-  style: StyleLike | null;
 }
 
 // 管理图层的属性

@@ -1,57 +1,61 @@
 <template>
   <div class="relative">
-    <div id="map" class="w-full h-50vh"></div>
+    <el-descriptions v-for="f in featureObjs" :key="f.id" column="4">
+      <el-descriptions-item label="图层名">{{ f.layerName }}</el-descriptions-item>
+      <el-descriptions-item label="唯一标识符">{{ f.idKey }}</el-descriptions-item>
+      <el-descriptions-item label="唯一标识符的值">{{ f.id }}</el-descriptions-item>
+      <el-descriptions-item label="操作">
+        <el-button type="primary" @click="locateFeature(f)">定位</el-button>
+      </el-descriptions-item>
+    </el-descriptions>
+    <switchBaseLayerExample ref="mapRef"></switchBaseLayerExample>
   </div>
 </template>
 
 <script setup lang="ts">
 import GeoJSON from 'ol/format/GeoJSON';
-import olHelper, { highLightStyle2, td4326WMTSPreset } from '../../olHelper/olHelper';
+import switchBaseLayerExample from './switchBaseLayerExample.vue';
+import olHelper, { colorStyleFunc, highLightStyle2, td4326WMTSPreset } from '../../olHelper/olHelper';
 import { geoJsonData, geoJsonData2 } from '../fakeData';
 import { Options } from 'ol/interaction/Select';
+import { drawTypeEnum } from '../../olHelper/type';
 
-// console.log('SelectOptions', Options);
+let mapRef = ref<typeof switchBaseLayerExample>();
+
+let _olHelper: olHelper;
+
+let featureObjs = [
+  {
+    layerName: 'test1',
+    id: 'layer1.XJ8hjX',
+    idKey: 'id',
+  },
+  {
+    layerName: 'test1',
+    id: 'layer1.OYjYFT',
+    idKey: 'id',
+  },
+];
+
+function locateFeature(feature: any) {
+  _olHelper.locateAndHighlight(feature);
+}
+
+// function locateFeatureAndModifyColor(feature: any) {
+//   _olHelper.locateAndHighlight(feature);
+//   let fs = _olHelper.highLightLayer.getSource()?.getFeatures();
+//   if (fs?.[0]) {
+//     fs[0].setStyle(colorStyleFunc('black'));
+//   }
+// }
+
 onMounted(() => {
-  let tdKey = '086d31664864bb1b890c28084f786ca8';
-  let _olHelper = new olHelper('map');
-  _olHelper.map.addLayer(td4326WMTSPreset(tdKey, 'img_c'));
-  _olHelper.map.addLayer(td4326WMTSPreset(tdKey, 'cva_c'));
-  _olHelper.setMapCenter([111.94199522379412, 31.81211945837647], 18);
-  let newFeatures = new GeoJSON().readFeatures(geoJsonData);
-  _olHelper.createUniLayer('test', newFeatures);
-  _olHelper.createUpdateLayer('test', (_layer) => {
-    let mapInfo = _olHelper.getMapInfo();
-    // getLayer(mapInfo).then((res) => {
-    //   if (_olHelper.compareMapInfo(mapInfo, _olHelper.getMapInfo())) {
-    //     let newFeatures = new GeoJSON().readFeatures(res.data);
-    //     _olHelper.updateLayerFromFeatures(newFeatures, _layer);
-    //   }
-    // });
-  });
-  //
-  // _olHelper.createUpdateLayer(
-  //   'test2',
-  //   (_layer) => {
-  //     let newFeatures = new GeoJSON().readFeatures(geoJsonData2);
-  //     _olHelper.updateLayerFromFeatures(newFeatures, _layer);
-  //   },
-  //   highLightStyle2,
-  // );
-
-  // let a = _olHelper.getLayerByName('test');
-  // let aa = a ? [a] : [];
-  // _olHelper.createSelect('test', {
-  //   layers: (_layer) => _layer.get('name') == 'test',
-  // });
-  //
-  // let a = _olHelper.createSelect('test2', {
-  //   // multiSelect: true,
-  //   layers: (_layer) => _layer.get('name') == 'test2',
-  // });
-  // a.setSelectMod('multiSelect');
-  // // console.log('a.selectMode', a.selectMode);
-  // a.setEventFunc((event) => {
-  //   console.log('111', 111);
-  // });
+  if (mapRef.value) {
+    _olHelper = mapRef.value.getHelper();
+    let newFeatures = new GeoJSON().readFeatures(geoJsonData);
+    _olHelper.createUniLayer('test1', newFeatures, { style: colorStyleFunc('blue') });
+    // let newFeatures2 = new GeoJSON().readFeatures(geoJsonData2);
+    // _olHelper.createUniLayer('test2', newFeatures2, { style: colorStyleFunc('yellow') });
+  }
 });
 </script>

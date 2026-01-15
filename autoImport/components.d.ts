@@ -10,11 +10,14 @@ declare module '@vue/runtime-core' {
     ElButton: (typeof import('element-plus/es'))['ElButton'];
     ElCheckbox: (typeof import('element-plus/es'))['ElCheckbox'];
     ElCheckboxGroup: (typeof import('element-plus/es'))['ElCheckboxGroup'];
+    ElDescriptions: (typeof import('element-plus/es'))['ElDescriptions'];
+    ElDescriptionsItem: (typeof import('element-plus/es'))['ElDescriptionsItem'];
     ElDialog: (typeof import('element-plus/es'))['ElDialog'];
     ElInput: (typeof import('element-plus/es'))['ElInput'];
     ElOption: (typeof import('element-plus/es'))['ElOption'];
     ElRadioButton: (typeof import('element-plus/es'))['ElRadioButton'];
     ElRadioGroup: (typeof import('element-plus/es'))['ElRadioGroup'];
     ElSelect: (typeof import('element-plus/es'))['ElSelect'];
+    ElTag: (typeof import('element-plus/es'))['ElTag'];
   }
 }
