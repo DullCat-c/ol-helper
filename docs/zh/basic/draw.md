@@ -4,7 +4,8 @@ outline: deep
 
 # 绘制和编辑
 
-# 用法
+
+## 用法
 
 绘制和编辑操作使用hook函数
 
@@ -30,7 +31,7 @@ modify.setEventFunc((event) => {
 ````
 
 
-# 绘制 
+## 绘制 
 
 `useDraw(type,options)`
 

@@ -413,7 +413,8 @@ export default class olHelper {
       layers: () => true,
       style: highLightStyle,
       hitTolerance: 10,
-      condition: (event): boolean => {
+      // condition:singleClick,
+      condition: (event) => {
         // 点击
         if (selectMode === 'click') {
           return singleClick(event);
@@ -422,10 +423,8 @@ export default class olHelper {
         }
         return false;
       },
-      toggleCondition: (event): boolean => {
-        if (selectMode === 'click') {
-          return singleClick(event);
-        } else if (selectMode === 'multiSelect') {
+      toggleCondition: (event) => {
+        if (selectMode === 'multiSelect') {
           return olSelectClick(event);
         }
         return false;

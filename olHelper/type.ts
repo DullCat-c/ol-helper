@@ -1,7 +1,7 @@
 import Style, { StyleLike } from 'ol/style/Style';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
-import { SelectEvent, Options as OlSelectOptions } from 'ol/interaction/Select';
+import Select, { SelectEvent, Options as OlSelectOptions } from 'ol/interaction/Select';
 import Geometry from 'ol/geom/Geometry';
 import olHelper from './olHelper';
 
@@ -36,4 +36,12 @@ export interface mapViewInfoType {
 
 export type drawTypeEnum = 'Point' | 'LineString' | 'Polygon' | 'Circle' | 'Square' | 'Box';
 export type UseDrawReturn = ReturnType<olHelper['useDraw']>;
-export type useSelectReturn = ReturnType<olHelper['useSelect']>;
+// export type useSelectReturn = ReturnType<olHelper['useSelect']>;
+
+export interface useSelectReturn {
+  remove: () => void;
+  setSelectMod: (mod: 'click' | 'multiSelect') => void;
+  getSelectMod: () => 'click' | 'multiSelect';
+  setEventFunc: (func: (event: SelectEvent) => void) => void;
+  selectInstance: any;
+}

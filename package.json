@@ -1,5 +1,5 @@
 {
-  "name": "ol-helper",
+  "name": "@dullcat/ol-helper",
   "version": "0.0.1",
   "main": "index.js",
   "homepage": "https://dullcat-c.github.io/ol-helper/",
@@ -16,7 +16,8 @@
     "lint:stylelint": "stylelint --cache --fix \"**/*.{vue,less,postcss,css,scss}\" --cache --cache-location node_modules/.cache/stylelint/",
     "lint:lint-staged": "lint-staged",
     "docs:build": "vitepress build docs",
-    "docs:preview": "vitepress preview docs"
+    "docs:preview": "vitepress preview docs",
+    "build": "vite build"
   },
   "lint-staged": {
     "*.{html,ts,js,json,jsx,tsx}": [

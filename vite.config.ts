@@ -15,8 +15,8 @@ export default defineConfig({
     UnoCSS(),
     Components({
       resolvers: [ElementPlusResolver()],
-      dts: './autoImport/components.d.ts',
-      // dts: false,
+      // dts: './autoImport/components.d.ts',
+      dts: false,
       directoryAsNamespace: true,
     }),
     // vue自动导入
@@ -32,19 +32,33 @@ export default defineConfig({
       ],
       // 生成 eslint 全局变量定义配置。
       eslintrc: {
-        enabled: true,
+        // enabled: true,
+        enabled: false,
         filepath: './autoImport/.eslintrc-auto-import.json',
         globalsPropValue: 'readonly',
       },
       // 生成 TypeScript 全局变量定义配置。
-      dts: './autoImport/auto-imports.d.ts',
-      // dts: false,
+      // dts: './autoImport/auto-imports.d.ts',
+      dts: false,
     }),
     // mkcert(),
     viteCompression({
       threshold: 1024, // 对大于 1kb 的文件进行压缩
     }),
   ],
+
+  build: {
+    lib: {
+      // 入口文件
+      entry: resolve(__dirname, 'olHelper/olHelper.ts'),
+      // 库名称
+      name: 'ol-helper',
+      // 输出文件名
+      fileName: (format) => `ol-helper.${format}.js`,
+    },
+    // 生成 sourcemap
+    sourcemap: true,
+  },
   resolve: {
     alias: {
       '@': resolve(__dirname, 'src'),

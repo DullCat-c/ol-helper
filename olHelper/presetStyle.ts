@@ -28,24 +28,6 @@ export const highLightStyle = new Style({
   zIndex: 99999,
 });
 
-export const highLightStyle2 = new Style({
-  // 绘制几何图形的样式
-  fill: new Fill({
-    color: 'yellow',
-  }),
-  stroke: new Stroke({
-    color: 'yellow',
-    width: 8,
-  }),
-  image: new CircleStyle({
-    radius: 5,
-    fill: new Fill({
-      color: 'yellow',
-    }),
-  }),
-  zIndex: 99999,
-});
-
 export function colorStyleFunc(color: string) {
   return new Style({
     // 绘制几何图形的样式

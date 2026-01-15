@@ -15,7 +15,7 @@
 <script setup lang="ts">
 import GeoJSON from 'ol/format/GeoJSON';
 import switchBaseLayerExample from './switchBaseLayerExample.vue';
-import olHelper, { colorStyleFunc, highLightStyle2, td4326WMTSPreset } from '../../olHelper/olHelper';
+import olHelper, { colorStyleFunc, td4326WMTSPreset } from '../../olHelper/olHelper';
 import { geoJsonData, geoJsonData2 } from '../fakeData';
 import { Options } from 'ol/interaction/Select';
 import { drawTypeEnum } from '../../olHelper/type';

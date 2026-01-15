@@ -4,9 +4,6 @@ outline: deep
 
 # 选择事件
 
-
-
-<selectExample></selectExample>
 ## 创建点击事件
 
 ````js
@@ -52,7 +49,7 @@ outline: deep
 
 
 ## 示例
-
+<selectExample></selectExample>
 
 
 ## 相关函数

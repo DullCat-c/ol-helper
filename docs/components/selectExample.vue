@@ -22,7 +22,7 @@
 <script setup lang="ts">
 import GeoJSON from 'ol/format/GeoJSON';
 import switchBaseLayerExample from './switchBaseLayerExample.vue';
-import olHelper, { colorStyleFunc, highLightStyle, highLightStyle2, td4326WMTSPreset } from '../../olHelper/olHelper';
+import olHelper, { colorStyleFunc, highLightStyle, td4326WMTSPreset } from '../../olHelper/olHelper';
 import { geoJsonData, geoJsonData2 } from '../fakeData';
 import { Options } from 'ol/interaction/Select';
 import { useSelectReturn } from '../../olHelper/type';
@@ -53,7 +53,6 @@ type SelectObj = {
   mode: 'click' | 'multiSelect';
 };
 
-let test1Select: useSelectReturn;
 onMounted(() => {
   if (mapRef.value) {
     _olHelper = mapRef.value.getHelper();
@@ -61,9 +60,6 @@ onMounted(() => {
     _olHelper.createUniLayer('test1', newFeatures, { style: colorStyleFunc('blue') });
     let newFeatures2 = new GeoJSON().readFeatures(geoJsonData2);
     _olHelper.createUniLayer('test2', newFeatures2, { style: colorStyleFunc('yellow') });
-    // selectObjs.value[0].instance = _olHelper.useSelect('test1', {
-    //   layers: (layer) => layer.get('name') === 'test1',
-    // });
   }
 });
 
@@ -71,6 +67,8 @@ function createSelect(f: SelectObj) {
   f.instance = _olHelper.useSelect(f.name, {
     layers: (layer) => layer.get('name') === f.name,
   });
+  f.forbidden = false;
+  f.mode = 'click';
 }
 
 function destroySelect(f: SelectObj) {
@@ -85,9 +83,9 @@ function clearSelect(f: SelectObj) {
 function forbiddenSelect(f: SelectObj) {
   f.forbidden = !f.forbidden;
   if (f.forbidden) {
-    _olHelper.setSelectActive([f.name], []);
-  } else {
     _olHelper.setSelectActive([], [f.name]);
+  } else {
+    _olHelper.setSelectActive([f.name], []);
   }
 }
 
