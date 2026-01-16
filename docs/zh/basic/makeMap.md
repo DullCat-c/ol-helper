@@ -49,6 +49,9 @@ _olHelper.map.addLayer(td4326WMTSPreset(tdKey, 'cva_c'));
 i.setMapCenter([114.393569, 30.50846]);
 
 ````
+::: warning
+需要注意的是:如果实例化地图后,没有设置中心点,将不会渲染地图
+:::
 
 
 ## 功能点-切换底图

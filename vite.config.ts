@@ -47,9 +47,11 @@ export default defineConfig({
       include: ['olHelper/*'],
       outDir: 'dist',
     }),
+
     // mkcert(),
     // viteCompression({
     //   threshold: 1024, // 对大于 1kb 的文件进行压缩
+    //   algorithm: 'gzip', // 压缩算法，可选 'gzip' 或 'brotli'
     // }),
   ],
 

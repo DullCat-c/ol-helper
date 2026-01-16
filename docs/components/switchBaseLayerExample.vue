@@ -20,6 +20,7 @@
 
 <script setup lang="ts">
 import olHelper, { td4326WMTSPreset } from '../../olHelper/olHelper';
+// import olHelper, { td4326WMTSPreset } from '../../dist/ol-helper.es.js';
 // import olHelper, { td4326WMTSPreset } from '@dullcat/ol-helper';
 
 let _olHelper!: olHelper;
