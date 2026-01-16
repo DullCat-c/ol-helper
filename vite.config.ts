@@ -44,7 +44,7 @@ export default defineConfig({
     }),
     dts({
       insertTypesEntry: true, // 在生成的包的根目录中插入一个类型入口文件
-      include: ['olHelper/olHelper.ts'],
+      include: ['olHelper/*'],
       outDir: 'dist',
     }),
     // mkcert(),

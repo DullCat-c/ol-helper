@@ -5,11 +5,17 @@
   "types": "./dist/ol-helper.d.ts",
   "homepage": "https://dullcat-c.github.io/ol-helper/",
   "keywords": [
-    "openlayers"
+    "openlayers",
+    "utils"
   ],
   "files": [
     "dist"
   ],
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DullCat-c/ol-helper"
+  },
   "scripts": {
     "prepare": "husky",
     "docs:dev": "vitepress dev docs",
@@ -20,13 +26,15 @@
     "lint:lint-staged": "lint-staged",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
+    "publish": "npm version patch && npm publish --access public",
     "build": "vite build"
   },
   "exports": {
     ".": {
-      "import": "./dist/ol-helper.es.js",
-      "require": "./dist/ol-helper.umd.cjs",
-      "types": "./dist/ol-helper.d.ts"
+      "import": {
+        "types": "./dist/ol-helper.d.ts",
+        "default": "./dist/ol-helper.es.js"
+      }
     },
     "./package.json": "./package.json"
   },
@@ -56,6 +64,7 @@
     "@unocss/preset-icons": "^66.3.3",
     "@unocss/preset-wind4": "^66.3.3",
     "@vitejs/plugin-vue": "^3.2.0",
+    "element-plus": "^2.13.0",
     "eslint": "^9.39.1",
     "eslint-plugin-vue": "^10.6.2",
     "globals": "^16.5.0",
@@ -76,13 +85,12 @@
     "vite-plugin-compression": "^0.5.1",
     "vite-plugin-dts": "^4.5.4",
     "vitepress": "2.0.0-alpha.13",
+    "vue": "^3.5.24",
     "vue-codemirror": "^6.1.1",
     "vue-tsc": "^3.1.8"
   },
   "dependencies": {
-    "element-plus": "^2.13.0",
-    "ol": "^7.5.2",
-    "vue": "^3.5.24"
+    "ol": "^7.5.2"
   },
   "engines": {
     "node": ">21"

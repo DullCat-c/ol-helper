@@ -20,12 +20,15 @@
 
 <script setup lang="ts">
 import olHelper, { td4326WMTSPreset } from '../../olHelper/olHelper';
+// import olHelper, { td4326WMTSPreset } from '@dullcat/ol-helper';
 
 let _olHelper!: olHelper;
 onMounted(() => {
   let tdKey = '086d31664864bb1b890c28084f786ca8';
   _olHelper = new olHelper('map');
-  // Object.assign(_olHelper, new olHelper('map'))
+  // Object.assign(_olHelper, new olHelper('map'));
+  // console.log('olHelper', _olHelper);
+  // console.log("td4326WMTSPreset(tdKey, 'img_c')", td4326WMTSPreset(tdKey, 'img_c'));
   _olHelper.map.addLayer(td4326WMTSPreset(tdKey, 'img_c'));
   _olHelper.map.addLayer(td4326WMTSPreset(tdKey, 'cva_c'));
   _olHelper.map.addLayer(td4326WMTSPreset(tdKey, 'vec_c', false));
