@@ -39,3 +39,6 @@ document.addEventListener('DOMContentLoaded', ()=> {
 });
 
 ```
+::: info
+建议搭配openlayers一起使用,ol>6
+:::

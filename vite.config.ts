@@ -7,12 +7,14 @@ import AutoImport from 'unplugin-auto-import/vite';
 import viteCompression from 'vite-plugin-compression';
 import UnoCSS from 'unocss/vite';
 import dts from 'vite-plugin-dts';
+import { visualizer } from 'rollup-plugin-visualizer';
 
 // https://vitejs.dev/config/
 export default defineConfig({
   base: './',
   plugins: [
     vue(),
+    visualizer(),
     UnoCSS(),
     Components({
       resolvers: [ElementPlusResolver()],

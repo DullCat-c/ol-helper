@@ -1,8 +1,6 @@
-import Style, { StyleLike } from 'ol/style/Style';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import Select, { SelectEvent, Options as OlSelectOptions } from 'ol/interaction/Select';
-import Geometry from 'ol/geom/Geometry';
 import olHelper from './olHelper';
 
 // 要高亮的数据

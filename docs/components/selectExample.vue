@@ -2,16 +2,19 @@
   <div class="relative">
     <el-descriptions v-for="f in selectObjs" :key="f.name" column="2">
       <el-descriptions-item label="点击事件名称">{{ `${f.name}(${f.name == 'test1' ? '蓝色' : '黄色'})` }}</el-descriptions-item>
-      <el-descriptions-item label="操作">
-        <el-button type="primary" @click="createSelect(f)" :disabled="f.instance">创建</el-button>
-        <el-button type="primary" @click="destroySelect(f)" :disabled="!f.instance">销毁</el-button>
-        <el-button type="primary" @click="switchMode(f)" :disabled="!f.instance">{{
-          f.mode === 'click' ? '切换多选' : '切换单选'
-        }}</el-button>
-        <el-button type="primary" @click="forbiddenSelect(f)" :disabled="!f.instance">{{
-          f.forbidden ? '启用' : '禁用'
-        }}</el-button>
-        <el-button type="primary" @click="clearSelect(f)" :disabled="!f.instance">清空</el-button>
+      <el-descriptions-item>
+        <div class="flex flex-wrap gap-2 noPaddingButton items-center">
+          <div>操作</div>
+          <el-button type="primary" @click="createSelect(f)" :disabled="f.instance">创建</el-button>
+          <el-button type="primary" @click="destroySelect(f)" :disabled="!f.instance">销毁</el-button>
+          <el-button type="primary" @click="switchMode(f)" :disabled="!f.instance">{{
+            f.mode === 'click' ? '切换多选' : '切换单选'
+          }}</el-button>
+          <el-button type="primary" @click="forbiddenSelect(f)" :disabled="!f.instance">{{
+            f.forbidden ? '启用' : '禁用'
+          }}</el-button>
+          <el-button type="primary" @click="clearSelect(f)" :disabled="!f.instance">清空</el-button>
+        </div>
       </el-descriptions-item>
     </el-descriptions>
 
@@ -98,3 +101,11 @@ function switchMode(f: SelectObj) {
   f.instance?.setSelectMod(f.mode);
 }
 </script>
+
+<style scoped>
+:deep(.noPaddingButton) {
+  button {
+    margin-left: 0px;
+  }
+}
+</style>

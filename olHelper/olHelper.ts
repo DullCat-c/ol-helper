@@ -9,26 +9,16 @@
 
 import olMap from 'ol/Map';
 import View, { ViewOptions } from 'ol/View';
-import TileLayer from 'ol/layer/Tile';
-import * as olProj from 'ol/proj';
-import type { ProjectionLike } from 'ol/proj';
 import * as olExtent from 'ol/extent';
-import WMTS from 'ol/source/WMTS';
-import XYZ from 'ol/source/XYZ';
-import WMTSTileGrid from 'ol/tilegrid/WMTS';
-import ScaleLine from 'ol/control/ScaleLine';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import olSelect from 'ol/interaction/Select';
 import { Options as OlSelectOptions, SelectEvent } from 'ol/interaction/Select';
 import Style, { StyleLike } from 'ol/style/Style';
 import WKT from 'ol/format/WKT.js';
-import { circular } from 'ol/geom/Polygon';
 import { defaults as defaultInteractions } from 'ol/interaction';
 import { click as olSelectClick, singleClick } from 'ol/events/condition';
-import GeoJSON from 'ol/format/GeoJSON';
 import Feature from 'ol/Feature';
-import Geometry from 'ol/geom/Geometry';
 import { drawTypeEnum, HighlightInfoType, LayerHandlesObject, mapViewInfoType } from './type';
 import { highLightStyle } from './presetStyle';
 import { equals } from 'ol/coordinate';
@@ -36,8 +26,6 @@ import { Options as BaseVectorOptions } from 'ol/layer/BaseVector';
 import Draw, { DrawEvent, Options as DrawOptions } from 'ol/interaction/Draw.js';
 import Modify, { ModifyEvent, Options as ModifyOptions } from 'ol/interaction/Modify.js';
 import { createBox, createRegularPolygon } from 'ol/interaction/Draw';
-// import SelectEvent from 'ol/interaction/Select';
-// import  * from './presetConfig'
 export * from './presetConfig';
 export * from './presetStyle';
 
