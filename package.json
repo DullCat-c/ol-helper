@@ -1,6 +1,6 @@
 {
   "name": "@dullcat/ol-helper",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "./dist/ol-helper.es.js",
   "types": "./dist/ol-helper.d.ts",
   "homepage": "https://dullcat-c.github.io/ol-helper/",
